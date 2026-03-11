@@ -1,84 +1,210 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cinéma Magnifique</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Raleway:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    /* ─── INDEX SPECIFIC ─── */
-    .stats-bar {
-      display: flex; justify-content: center; gap: 4rem;
-      padding: 3rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-      background: rgba(201,168,76,0.02);
-    }
-    .stat-item { text-align: center; }
-    .stat-num {
-      font-family: 'Cinzel', serif; font-size: 2.5rem; font-weight: 900;
-      background: linear-gradient(135deg, var(--gold-light), var(--gold));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      display: block;
-    }
-    .stat-txt { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
-    .newsletter {
-      padding: 5rem 0;
-      text-align: center;
-      background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent 50%, rgba(76,201,240,0.03));
-      border-top: 1px solid var(--border);
-    }
-    .newsletter h3 { font-family: 'Cinzel', serif; font-size: 2rem; color: var(--text); margin-bottom: 0.5rem; }
-    .newsletter p { color: var(--text-dim); margin-bottom: 2rem; }
-    .newsletter-form { display: flex; gap: 0; max-width: 450px; margin: 0 auto; }
-    .newsletter-form input {
-      flex: 1; background: var(--card-bg); border: 1px solid var(--border);
-      border-right: none; padding: 0.9rem 1.2rem; color: var(--text);
-      font-family: inherit; font-size: 0.9rem; border-radius: 2px 0 0 2px;
-    }
-    .newsletter-form input:focus { outline: none; border-color: var(--gold); }
-    .newsletter-form button {
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      border: none; padding: 0.9rem 1.8rem; color: var(--black);
-      font-weight: 700; font-size: 0.8rem; letter-spacing: 0.12em;
-      text-transform: uppercase; cursor: none; border-radius: 0 2px 2px 0;
-      font-family: inherit; transition: all 0.3s;
-    }
-    .newsletter-form button:hover { filter: brightness(1.1); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinéma Magnifique</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══ INDEX-SPECIFIC ═══ */
+.hero{
+  position:relative;height:100svh;min-height:560px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right, rgba(6,6,10,.85) 40%, rgba(6,6,10,.3) 100%),
+    linear-gradient(to top, rgba(6,6,10,1) 0%, rgba(6,6,10,.0) 35%);
+  z-index:1;
+}
+.hero-img{
+  position:absolute;inset:0;z-index:0;
+}
+.hero-img img{width:100%;height:100%;object-fit:cover;object-position:center 20%;filter:brightness(.7)saturate(1.15)}
+.hero-grid{
+  position:absolute;inset:0;z-index:2;
+  background-image:linear-gradient(rgba(200,169,81,.055) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(200,169,81,.055) 1px,transparent 1px);
+  background-size:56px 56px;
+  transform:rotateX(52deg) translateY(40%) scale(2.5);
+  transform-origin:center bottom;
+  animation:gridScroll 25s linear infinite;
+  pointer-events:none;
+}
+@keyframes gridScroll{from{background-position:0 0}to{background-position:0 56px}}
+
+.hero-orbs{position:absolute;inset:0;z-index:1;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);animation:orbAnim 9s ease-in-out infinite}
+.orb1{width:clamp(200px,35vw,420px);height:clamp(200px,35vw,420px);background:radial-gradient(circle,rgba(200,169,81,.45),transparent);top:-80px;left:-60px;animation-delay:0s}
+.orb2{width:clamp(150px,25vw,300px);height:clamp(150px,25vw,300px);background:radial-gradient(circle,rgba(230,57,70,.35),transparent);bottom:0;right:8%;animation-delay:-4s}
+.orb3{width:clamp(120px,20vw,240px);height:clamp(120px,20vw,240px);background:radial-gradient(circle,rgba(76,201,240,.25),transparent);top:30%;right:0;animation-delay:-7s}
+@keyframes orbAnim{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-22px) scale(1.08)}}
+
+.hero-content{
+  position:relative;z-index:10;
+  padding:0 clamp(1rem,5vw,5rem);
+  max-width:900px;
+  animation:hEntrance 1.2s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes hEntrance{from{opacity:0;transform:translateY(50px) rotateX(12deg)}to{opacity:1;transform:none}}
+
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.35rem 1rem;border:1px solid var(--gold);
+  color:var(--gold);font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;
+  border-radius:2px;margin-bottom:1.5rem;background:rgba(200,169,81,.08);
+  animation:badgePulse 3s ease-in-out infinite;
+}
+.hero-badge::before{content:'◆';font-size:.5rem;opacity:.7}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 8px rgba(200,169,81,.2)}50%{box-shadow:0 0 22px rgba(200,169,81,.45)}}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.5rem,7.5vw,7rem);
+  font-weight:900;line-height:.95;letter-spacing:-.02em;
+  background:linear-gradient(135deg,#fff 30%,var(--gold-light) 60%,var(--gold) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(200,169,81,.3));
+  margin-bottom:1.5rem;
+}
+.hero-sub{color:rgba(237,232,223,.7);font-size:clamp(.9rem,2vw,1.1rem);font-weight:300;margin-bottom:2.5rem;max-width:520px;line-height:1.7}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-scroll{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.4rem;
+  color:var(--muted);font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;z-index:10;
+  animation:scrollBounce 2.2s ease-in-out infinite;
+}
+.hero-scroll::after{content:'';width:1px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent);margin-top:.2rem}
+@keyframes scrollBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+/* Stats row */
+.stats-row{
+  display:flex;justify-content:center;gap:clamp(1.5rem,5vw,4rem);flex-wrap:wrap;
+  padding:clamp(1.5rem,4vw,2.5rem) 0;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  background:rgba(200,169,81,.02);
+}
+.stat-item{text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;background:linear-gradient(135deg,var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;display:block}
+.stat-lbl{font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+
+/* Spotlight */
+.spot-section{
+  padding:clamp(3.5rem,7vw,7rem) 0;
+  background:linear-gradient(135deg,rgba(200,169,81,.04) 0%,transparent 50%);
+}
+.spot-inner{display:grid;grid-template-columns:auto 1fr;gap:clamp(2rem,5vw,5rem);align-items:center}
+.spot-media{perspective:900px}
+.spot-poster-wrap{
+  width:min(320px,40vw);border-radius:8px;overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:28px 28px 70px rgba(0,0,0,.75);
+  transform:rotateY(-7deg) rotateX(3deg);
+  transition:transform .6s var(--ease);
+  animation:spotFloat 6s ease-in-out infinite;
+  position:relative;
+}
+.spot-poster-wrap:hover{transform:none}
+@keyframes spotFloat{0%,100%{transform:rotateY(-7deg) rotateX(3deg) translateY(0)}50%{transform:rotateY(-7deg) rotateX(3deg) translateY(-10px)}}
+.spot-poster-wrap img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block}
+.spot-glow{position:absolute;inset:0;box-shadow:inset 0 0 60px rgba(200,169,81,.08);pointer-events:none}
+
+.spot-info{max-width:600px}
+.spot-tags{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.stag{padding:.25rem .7rem;border:1px solid var(--border);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-radius:2px}
+.spot-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4.5vw,3.8rem);font-weight:900;line-height:1;color:var(--text);margin-bottom:1rem}
+.spot-desc{font-size:clamp(.88rem,1.5vw,1rem);color:var(--muted);line-height:1.8;margin-bottom:1.8rem;font-weight:300}
+.spot-stats{display:flex;gap:clamp(1.2rem,3vw,2.5rem);margin-bottom:2rem;flex-wrap:wrap}
+.sp-stat-v{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3vw,1.8rem);font-weight:700;color:var(--gold);display:block}
+.sp-stat-l{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.spot-btns{display:flex;gap:.8rem;flex-wrap:wrap}
+
+/* Newsletter */
+.nl-section{
+  padding:clamp(3rem,6vw,5rem) 0;text-align:center;
+  background:linear-gradient(135deg,rgba(200,169,81,.05),transparent 50%,rgba(76,201,240,.02));
+  border-top:1px solid var(--border);
+}
+.nl-title{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,4vw,2.4rem);color:var(--text);margin-bottom:.6rem}
+.nl-sub{color:var(--muted);margin-bottom:2rem;font-size:clamp(.85rem,2vw,1rem)}
+.nl-form{display:flex;gap:0;max-width:440px;margin:0 auto;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border)}
+.nl-form input{flex:1;background:var(--card);border:none;padding:.85rem 1.1rem;color:var(--text);font-family:inherit;font-size:.9rem;min-width:0}
+.nl-form input:focus{outline:none}
+.nl-form input::placeholder{color:var(--muted)}
+.nl-form button{background:var(--gold);color:var(--black);border:none;padding:.85rem 1.4rem;font-weight:700;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-family:inherit;transition:.3s;flex-shrink:0}
+.nl-form button:hover{background:var(--gold-light)}
+
+@media(max-width:780px){
+  .spot-inner{grid-template-columns:1fr}
+  .spot-poster-wrap{width:min(220px,55vw);margin:0 auto}
+  .spot-info{text-align:center}
+  .spot-tags,.spot-btns,.spot-stats{justify-content:center}
+}
+@media(max-width:480px){
+  .hero-content{padding:0 1rem}
+  .stats-row{gap:1rem}
+  .nl-form{flex-direction:column;border-radius:0}
+  .nl-form button{width:100%;padding:.8rem}
+}
+</style>
 </head>
 <body>
 
-<!-- LOADER -->
-<div class="page-loader">
-  <div>
-    <div class="loader-logo">C M</div>
-    <div class="loader-bar"></div>
+<!-- Film Transition Overlay -->
+<div id="film-trans">
+  <div class="ft-strip" id="ft-top"></div>
+  <div class="ft-strip" id="ft-bot"></div>
+  <div id="ft-flash"></div>
+  <div id="ft-grain"></div>
+</div>
+
+<!-- Custom Cursor -->
+<div id="cdot"></div>
+<div id="cring"></div>
+
+<!-- Mobile Menu -->
+<div id="mob">
+  <button id="mob-close">✕</button>
+  <a href="index.html" class="active" data-t="nav_home">Home</a>
+  <a href="movies.html" data-t="nav_movies">Movies</a>
+  <a href="about.html" data-t="nav_about">About</a>
+  <a href="contact.html" data-t="nav_contact">Contact</a>
+  <div class="lang-row">
+    <button class="lang-btn" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="ar">عر</button>
   </div>
 </div>
 
-<!-- CURSOR -->
-<div class="cursor"></div>
-<div class="cursor-ring"></div>
-
-<!-- NAVBAR -->
-<nav>
-  <a href="index.html" class="nav-logo">C<span>●</span>M</a>
+<!-- Navbar -->
+<nav id="nav">
+  <a href="index.html" class="logo">C<em>●</em>M</a>
   <ul class="nav-links">
     <li><a href="index.html" class="active" data-t="nav_home">Home</a></li>
     <li><a href="movies.html" data-t="nav_movies">Movies</a></li>
     <li><a href="about.html" data-t="nav_about">About</a></li>
     <li><a href="contact.html" data-t="nav_contact">Contact</a></li>
   </ul>
-  <div class="nav-lang">
+  <div class="nav-right">
     <button class="lang-btn active" data-lang="en">EN</button>
     <button class="lang-btn" data-lang="fr">FR</button>
     <button class="lang-btn" data-lang="ar">عر</button>
+    <button id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
+<div id="wrap">
+
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-img">
+    <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600&q=80&auto=format&fit=crop" alt="Cinema">
+  </div>
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-orbs">
@@ -86,348 +212,240 @@
     <div class="orb orb2"></div>
     <div class="orb orb3"></div>
   </div>
-
   <div class="hero-content">
     <div class="hero-badge" data-t="hero_badge">Premium Cinematic Experience</div>
-    <h1 data-t="hero_title">CINÉMA<br>MAGNIFIQUE</h1>
-    <p class="hero-sub" data-t="hero_sub">Discover the world's greatest films in stunning quality</p>
-    <div class="hero-cta">
-      <a href="movies.html" class="btn-primary" data-t="hero_cta1">Explore Now</a>
-      <a href="#spotlight" class="btn-secondary" data-t="hero_cta2">Watch Trailer</a>
+    <h1 class="hero-title" data-t="hero_title">DISCOVER<br>GREAT CINEMA</h1>
+    <p class="hero-sub" data-t="hero_sub">Over 12,000 films curated for passionate cinephiles worldwide</p>
+    <div class="hero-btns">
+      <a href="movies.html" class="btn btn-gold" data-t="hero_btn1">Explore Films</a>
+      <a href="#spotlight" class="btn btn-outline" data-t="hero_btn2">Watch Trailer</a>
     </div>
   </div>
-
-  <div class="hero-scroll">
-    <span data-t="hero_scroll">Scroll</span>
-  </div>
+  <div class="hero-scroll"><span>Scroll</span></div>
 </section>
 
 <!-- MARQUEE -->
-<div class="marquee-wrapper">
-  <div class="marquee-track"></div>
-</div>
+<div class="marquee-bar"><div class="marquee-track"></div></div>
 
 <!-- STATS -->
-<div class="stats-bar">
-  <div class="stat-item reveal">
-    <span class="stat-num">12K+</span>
-    <span class="stat-txt">Films</span>
-  </div>
-  <div class="stat-item reveal reveal-delay-1">
-    <span class="stat-num">4M+</span>
-    <span class="stat-txt">Viewers</span>
-  </div>
-  <div class="stat-item reveal reveal-delay-2">
-    <span class="stat-num">150+</span>
-    <span class="stat-txt">Countries</span>
-  </div>
-  <div class="stat-item reveal reveal-delay-3">
-    <span class="stat-num">98%</span>
-    <span class="stat-txt">Satisfaction</span>
-  </div>
+<div class="stats-row container">
+  <div class="stat-item reveal"><span class="stat-num">12K+</span><span class="stat-lbl">Films</span></div>
+  <div class="stat-item reveal rd1"><span class="stat-num">4M+</span><span class="stat-lbl">Members</span></div>
+  <div class="stat-item reveal rd2"><span class="stat-num">150+</span><span class="stat-lbl">Countries</span></div>
+  <div class="stat-item reveal rd3"><span class="stat-num">98%</span><span class="stat-lbl">Satisfaction</span></div>
 </div>
 
 <!-- SPOTLIGHT -->
-<section id="spotlight" class="spotlight">
-  <div class="container">
-    <div class="spotlight-inner">
-      <div class="spotlight-media">
-        <div class="spotlight-poster">
-          <div class="spotlight-poster-fallback">
-            <span style="font-size:5rem">🏜️</span>
-            <span>DUNE: PART TWO</span>
-          </div>
-        </div>
+<section class="spot-section" id="spotlight">
+<div class="container">
+  <div class="spot-inner">
+    <div class="spot-media">
+      <div class="spot-poster-wrap">
+        <img src="https://images.unsplash.com/photo-1706901107765-fe36a19806c4?w=600&q=80&auto=format&fit=crop" alt="Dune Part Two">
+        <div class="spot-glow"></div>
       </div>
-      <div class="reveal">
-        <div class="spotlight-tags">
-          <span class="tag" data-t="spotlight_genre">Sci-Fi</span>
-          <span class="tag">Denis Villeneuve</span>
-          <span class="tag" data-t="spotlight_year">2024</span>
-        </div>
-        <h2 class="spotlight-title" data-t="spotlight_title">Dune: Part Two</h2>
-        <p class="spotlight-desc" data-t="spotlight_desc">Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family.</p>
-        <div class="spotlight-stats">
-          <div class="stat">
-            <span class="stat-val" data-t="stat1_val">8.5</span>
-            <span class="stat-lbl" data-t="stat1_lbl">IMDb Rating</span>
-          </div>
-          <div class="stat">
-            <span class="stat-val" data-t="stat2_val">166</span>
-            <span class="stat-lbl" data-t="stat2_lbl">Min Duration</span>
-          </div>
-          <div class="stat">
-            <span class="stat-val" data-t="stat3_val">2024</span>
-            <span class="stat-lbl" data-t="stat3_lbl">Year</span>
-          </div>
-        </div>
-        <div class="spotlight-actions">
-          <a href="movies.html" class="btn-primary" data-t="btn_watch">Watch Now</a>
-          <a href="#" class="btn-secondary" data-t="btn_info">More Info</a>
-        </div>
+    </div>
+    <div class="spot-info reveal">
+      <div class="section-tag" data-t="spot_tag">Film of the Week</div>
+      <div class="spot-tags">
+        <span class="stag" data-t="spot_genre">Sci-Fi / Epic</span>
+        <span class="stag" data-t="spot_dir">Denis Villeneuve</span>
+        <span class="stag" data-t="spot_year">2024</span>
+      </div>
+      <h2 class="spot-title" data-t="spot_title">Dune: Part Two</h2>
+      <p class="spot-desc" data-t="spot_desc">Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family.</p>
+      <div class="spot-stats">
+        <div><span class="sp-stat-v" data-t="s1v">8.5</span><span class="sp-stat-l" data-t="s1l">IMDb Rating</span></div>
+        <div><span class="sp-stat-v" data-t="s2v">166</span><span class="sp-stat-l" data-t="s2l">Minutes</span></div>
+        <div><span class="sp-stat-v" data-t="s3v">2024</span><span class="sp-stat-l" data-t="s3l">Year</span></div>
+      </div>
+      <div class="spot-btns">
+        <a href="movies.html" class="btn btn-gold" data-t="btn_watch">Watch Now</a>
+        <a href="movies.html" class="btn btn-outline" data-t="btn_info">More Info</a>
       </div>
     </div>
   </div>
+</div>
 </section>
 
-<!-- FEATURED MOVIES -->
-<section id="featured">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-tag" data-t="featured_tag">Selection</div>
-      <h2 class="section-title" data-t="featured_title">Featured Films</h2>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="movies-grid">
-
-      <div class="movie-card" data-genre="action">
-        <div class="card-inner">
-          <div class="card-poster">
-            <div class="card-poster-fallback">
-              <span class="poster-icon">🔥</span>
-              <span class="poster-title-fallback">Oppenheimer</span>
-            </div>
-            <div class="card-overlay"><div class="play-btn">▶</div></div>
-          </div>
-          <span class="card-badge badge-top">TOP</span>
-          <div class="card-rating">★ 8.9</div>
-          <div class="card-info">
-            <div class="card-title">Oppenheimer</div>
-            <div class="card-meta">
-              <span>2023</span>
-              <span class="card-genre">Drama</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="movie-card" data-genre="scifi">
-        <div class="card-inner">
-          <div class="card-poster">
-            <div class="card-poster-fallback">
-              <span class="poster-icon">🏜️</span>
-              <span class="poster-title-fallback">Dune: Part Two</span>
-            </div>
-            <div class="card-overlay"><div class="play-btn">▶</div></div>
-          </div>
-          <span class="card-badge badge-new">NEW</span>
-          <div class="card-rating">★ 8.5</div>
-          <div class="card-info">
-            <div class="card-title">Dune: Part Two</div>
-            <div class="card-meta">
-              <span>2024</span>
-              <span class="card-genre">Sci-Fi</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="movie-card" data-genre="thriller">
-        <div class="card-inner">
-          <div class="card-poster">
-            <div class="card-poster-fallback">
-              <span class="poster-icon">🌊</span>
-              <span class="poster-title-fallback">Past Lives</span>
-            </div>
-            <div class="card-overlay"><div class="play-btn">▶</div></div>
-          </div>
-          <span class="card-badge badge-exclusive">EXCLU</span>
-          <div class="card-rating">★ 7.9</div>
-          <div class="card-info">
-            <div class="card-title">Past Lives</div>
-            <div class="card-meta">
-              <span>2023</span>
-              <span class="card-genre">Romance</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="movie-card" data-genre="action">
-        <div class="card-inner">
-          <div class="card-poster">
-            <div class="card-poster-fallback">
-              <span class="poster-icon">🎭</span>
-              <span class="poster-title-fallback">Poor Things</span>
-            </div>
-            <div class="card-overlay"><div class="play-btn">▶</div></div>
-          </div>
-          <span class="card-badge badge-top">AWARD</span>
-          <div class="card-rating">★ 8.0</div>
-          <div class="card-info">
-            <div class="card-title">Poor Things</div>
-            <div class="card-meta">
-              <span>2023</span>
-              <span class="card-genre">Drama</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="movie-card" data-genre="scifi">
-        <div class="card-inner">
-          <div class="card-poster">
-            <div class="card-poster-fallback">
-              <span class="poster-icon">🤖</span>
-              <span class="poster-title-fallback">Mission Impossible 7</span>
-            </div>
-            <div class="card-overlay"><div class="play-btn">▶</div></div>
-          </div>
-          <div class="card-rating">★ 7.8</div>
-          <div class="card-info">
-            <div class="card-title">Mission: Impossible 7</div>
-            <div class="card-meta">
-              <span>2023</span>
-              <span class="card-genre">Action</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="movie-card" data-genre="drama">
-        <div class="card-inner">
-          <div class="card-poster">
-            <div class="card-poster-fallback">
-              <span class="poster-icon">🎸</span>
-              <span class="poster-title-fallback">Killers of the Flower Moon</span>
-            </div>
-            <div class="card-overlay"><div class="play-btn">▶</div></div>
-          </div>
-          <span class="card-badge badge-top">TOP</span>
-          <div class="card-rating">★ 7.7</div>
-          <div class="card-info">
-            <div class="card-title">Killers of the Flower Moon</div>
-            <div class="card-meta">
-              <span>2023</span>
-              <span class="card-genre">History</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div style="text-align:center; margin-top:3rem;" class="reveal">
-      <a href="movies.html" class="btn-primary" data-t="hero_cta1">Explore Now</a>
-    </div>
+<!-- FEATURED FILMS -->
+<section class="section section-alt">
+<div class="container">
+  <div class="section-header reveal">
+    <span class="section-tag" data-t="feat_tag">Selection</span>
+    <h2 class="section-title" data-t="feat_title">Featured Films</h2>
+    <div class="divider"></div>
   </div>
+  <div class="card-grid">
+
+    <div class="movie-card reveal" data-genre="drama">
+      <div class="card-poster">
+        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=75&auto=format&fit=crop" alt="Oppenheimer" loading="lazy">
+        <div class="card-over"><div class="play-c">▶</div></div>
+        <span class="c-badge b-top">TOP</span>
+        <span class="c-score">★ 8.9</span>
+      </div>
+      <div class="card-body">
+        <div class="c-title">Oppenheimer</div>
+        <div class="c-meta"><span>2023</span><span class="c-genre">Drama</span></div>
+      </div>
+    </div>
+
+    <div class="movie-card reveal rd1" data-genre="scifi">
+      <div class="card-poster">
+        <img src="https://images.unsplash.com/photo-1706901107765-fe36a19806c4?w=400&q=75&auto=format&fit=crop" alt="Dune Part Two" loading="lazy">
+        <div class="card-over"><div class="play-c">▶</div></div>
+        <span class="c-badge b-new">NEW</span>
+        <span class="c-score">★ 8.5</span>
+      </div>
+      <div class="card-body">
+        <div class="c-title">Dune: Part Two</div>
+        <div class="c-meta"><span>2024</span><span class="c-genre">Sci-Fi</span></div>
+      </div>
+    </div>
+
+    <div class="movie-card reveal rd2" data-genre="drama">
+      <div class="card-poster">
+        <img src="https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=400&q=75&auto=format&fit=crop" alt="Poor Things" loading="lazy">
+        <div class="card-over"><div class="play-c">▶</div></div>
+        <span class="c-badge b-top">AWARD</span>
+        <span class="c-score">★ 8.0</span>
+      </div>
+      <div class="card-body">
+        <div class="c-title">Poor Things</div>
+        <div class="c-meta"><span>2023</span><span class="c-genre">Drama</span></div>
+      </div>
+    </div>
+
+    <div class="movie-card reveal rd3" data-genre="romance">
+      <div class="card-poster">
+        <img src="https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?w=400&q=75&auto=format&fit=crop" alt="Past Lives" loading="lazy">
+        <div class="card-over"><div class="play-c">▶</div></div>
+        <span class="c-badge b-exc">EXCLU</span>
+        <span class="c-score">★ 7.9</span>
+      </div>
+      <div class="card-body">
+        <div class="c-title">Past Lives</div>
+        <div class="c-meta"><span>2023</span><span class="c-genre">Romance</span></div>
+      </div>
+    </div>
+
+    <div class="movie-card reveal" data-genre="action">
+      <div class="card-poster">
+        <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?w=400&q=75&auto=format&fit=crop" alt="Mission Impossible" loading="lazy">
+        <div class="card-over"><div class="play-c">▶</div></div>
+        <span class="c-score">★ 7.8</span>
+      </div>
+      <div class="card-body">
+        <div class="c-title">Mission: Impossible 7</div>
+        <div class="c-meta"><span>2023</span><span class="c-genre">Action</span></div>
+      </div>
+    </div>
+
+    <div class="movie-card reveal rd1" data-genre="drama">
+      <div class="card-poster">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=75&auto=format&fit=crop" alt="Killers of the Flower Moon" loading="lazy">
+        <div class="card-over"><div class="play-c">▶</div></div>
+        <span class="c-badge b-top">TOP</span>
+        <span class="c-score">★ 7.7</span>
+      </div>
+      <div class="card-body">
+        <div class="c-title">Killers of the Flower Moon</div>
+        <div class="c-meta"><span>2023</span><span class="c-genre">History</span></div>
+      </div>
+    </div>
+
+  </div>
+  <div style="text-align:center;margin-top:3rem" class="reveal">
+    <a href="movies.html" class="btn btn-outline" data-t="hero_btn1">Explore Films</a>
+  </div>
+</div>
 </section>
 
 <!-- CATEGORIES -->
-<section>
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-tag" data-t="cat_tag">Browse</div>
-      <h2 class="section-title" data-t="cat_title">Explore by Genre</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="categories-grid reveal">
-      <a href="movies.html?genre=action" class="cat-card">
-        <span class="cat-icon">💥</span>
-        <span class="cat-name" data-t="cat_action">Action</span>
-        <div class="cat-count">2,340 films</div>
-      </a>
-      <a href="movies.html?genre=drama" class="cat-card">
-        <span class="cat-icon">🎭</span>
-        <span class="cat-name" data-t="cat_drama">Drama</span>
-        <div class="cat-count">3,120 films</div>
-      </a>
-      <a href="movies.html?genre=scifi" class="cat-card">
-        <span class="cat-icon">🚀</span>
-        <span class="cat-name" data-t="cat_sci">Sci-Fi</span>
-        <div class="cat-count">1,890 films</div>
-      </a>
-      <a href="movies.html?genre=comedy" class="cat-card">
-        <span class="cat-icon">😂</span>
-        <span class="cat-name" data-t="cat_comedy">Comedy</span>
-        <div class="cat-count">2,650 films</div>
-      </a>
-      <a href="movies.html?genre=thriller" class="cat-card">
-        <span class="cat-icon">🔪</span>
-        <span class="cat-name" data-t="cat_thriller">Thriller</span>
-        <div class="cat-count">1,740 films</div>
-      </a>
-      <a href="movies.html?genre=romance" class="cat-card">
-        <span class="cat-icon">💕</span>
-        <span class="cat-name" data-t="cat_romance">Romance</span>
-        <div class="cat-count">1,560 films</div>
-      </a>
-      <a href="movies.html?genre=horror" class="cat-card">
-        <span class="cat-icon">👻</span>
-        <span class="cat-name" data-t="cat_horror">Horror</span>
-        <div class="cat-count">980 films</div>
-      </a>
-      <a href="movies.html?genre=docs" class="cat-card">
-        <span class="cat-icon">🎬</span>
-        <span class="cat-name" data-t="cat_docs">Documentary</span>
-        <div class="cat-count">1,200 films</div>
-      </a>
-    </div>
+<section class="section">
+<div class="container">
+  <div class="section-header reveal">
+    <span class="section-tag" data-t="cat_tag">Browse</span>
+    <h2 class="section-title" data-t="cat_title">Explore by Genre</h2>
+    <div class="divider"></div>
   </div>
+  <div class="cat-grid reveal">
+    <a href="movies.html" class="cat-card"><span class="cat-icon">💥</span><span class="cat-name" data-t="g_action">Action</span><span class="cat-count">2,340</span></a>
+    <a href="movies.html" class="cat-card"><span class="cat-icon">🎭</span><span class="cat-name" data-t="g_drama">Drama</span><span class="cat-count">3,120</span></a>
+    <a href="movies.html" class="cat-card"><span class="cat-icon">🚀</span><span class="cat-name" data-t="g_scifi">Sci-Fi</span><span class="cat-count">1,890</span></a>
+    <a href="movies.html" class="cat-card"><span class="cat-icon">😂</span><span class="cat-name" data-t="g_comedy">Comedy</span><span class="cat-count">2,650</span></a>
+    <a href="movies.html" class="cat-card"><span class="cat-icon">🔪</span><span class="cat-name" data-t="g_thriller">Thriller</span><span class="cat-count">1,740</span></a>
+    <a href="movies.html" class="cat-card"><span class="cat-icon">💕</span><span class="cat-name" data-t="g_romance">Romance</span><span class="cat-count">1,560</span></a>
+    <a href="movies.html" class="cat-card"><span class="cat-icon">👻</span><span class="cat-name" data-t="g_horror">Horror</span><span class="cat-count">980</span></a>
+    <a href="movies.html" class="cat-card"><span class="cat-icon">🎬</span><span class="cat-name" data-t="g_docs">Documentary</span><span class="cat-count">1,200</span></a>
+  </div>
+</div>
 </section>
 
 <!-- NEWSLETTER -->
-<div class="newsletter reveal">
-  <div class="container">
-    <h3>Stay Updated</h3>
-    <p>Get notified about new releases and exclusive premieres</p>
-    <div class="newsletter-form">
-      <input type="email" placeholder="your@email.com">
-      <button>Subscribe</button>
-    </div>
-  </div>
+<div class="nl-section">
+<div class="container">
+  <h3 class="nl-title reveal" data-t="nl_title">Stay in the Frame</h3>
+  <p class="nl-sub reveal rd1" data-t="nl_sub">Get curated picks and exclusive premiere alerts</p>
+  <form class="nl-form reveal rd2" data-nl>
+    <input type="email" data-t="nl_ph" placeholder="Your email address" required>
+    <button type="submit" data-t="nl_btn">Subscribe</button>
+  </form>
+</div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a href="index.html" class="nav-logo">C<span style="color:var(--accent)">●</span>M</a>
-        <p class="footer-desc" data-t="footer_desc">The ultimate destination for cinema lovers. Discover, watch and celebrate the art of filmmaking.</p>
-        <div class="social-links">
-          <a href="#" class="social-link">𝕏</a>
-          <a href="#" class="social-link">f</a>
-          <a href="#" class="social-link">▶</a>
-          <a href="#" class="social-link">📷</a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h4 data-t="footer_links">Quick Links</h4>
-        <ul>
-          <li><a href="index.html" data-t="nav_home">Home</a></li>
-          <li><a href="movies.html" data-t="nav_movies">Movies</a></li>
-          <li><a href="about.html" data-t="nav_about">About</a></li>
-          <li><a href="contact.html" data-t="nav_contact">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4 data-t="footer_genres">Genres</h4>
-        <ul>
-          <li><a href="#" data-t="cat_action">Action</a></li>
-          <li><a href="#" data-t="cat_drama">Drama</a></li>
-          <li><a href="#" data-t="cat_sci">Sci-Fi</a></li>
-          <li><a href="#" data-t="cat_comedy">Comedy</a></li>
-          <li><a href="#" data-t="cat_thriller">Thriller</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4 data-t="footer_info">Information</h4>
-        <ul>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Service</a></li>
-          <li><a href="#">Help Center</a></li>
-          <li><a href="#">Press Kit</a></li>
-        </ul>
+<div class="container">
+  <div class="f-grid">
+    <div>
+      <span class="f-logo">C<em>●</em>M</span>
+      <p class="f-desc" data-t="f_desc">The ultimate destination for cinema lovers.</p>
+      <div class="f-social">
+        <a href="#" class="sl">𝕏</a>
+        <a href="#" class="sl">f</a>
+        <a href="#" class="sl">▶</a>
+        <a href="#" class="sl">📷</a>
       </div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2024 Cinéma Magnifique. <span data-t="footer_rights">All rights reserved</span>.</span>
-      <span style="color:var(--gold)">C●M</span>
+    <div class="f-col">
+      <h4 data-t="f_links">Quick Links</h4>
+      <ul>
+        <li><a href="index.html" data-t="nav_home">Home</a></li>
+        <li><a href="movies.html" data-t="nav_movies">Movies</a></li>
+        <li><a href="about.html" data-t="nav_about">About</a></li>
+        <li><a href="contact.html" data-t="nav_contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4 data-t="f_genres">Genres</h4>
+      <ul>
+        <li><a href="movies.html" data-t="g_action">Action</a></li>
+        <li><a href="movies.html" data-t="g_drama">Drama</a></li>
+        <li><a href="movies.html" data-t="g_scifi">Sci-Fi</a></li>
+        <li><a href="movies.html" data-t="g_comedy">Comedy</a></li>
+        <li><a href="movies.html" data-t="g_thriller">Thriller</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h4 data-t="f_info">Info</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Press Kit</a></li>
+      </ul>
     </div>
   </div>
+  <div class="f-bottom">
+    <span>© 2024 Cinéma Magnifique — <span data-t="f_rights">All rights reserved</span></span>
+    <span style="color:var(--gold);font-family:'Playfair Display',serif">C●M</span>
+  </div>
+</div>
 </footer>
+
+</div><!-- #wrap -->
 
 <script src="script.js"></script>
 </body>
