@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Cinéma Magnifique</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Raleway:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    .faq-section { padding: 5rem 0; background: rgba(10,10,20,0.5); }
+    .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .faq-item {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 1.5rem; cursor: none; transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .faq-item:hover { border-color: rgba(201,168,76,0.4); }
+    .faq-q {
+      font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--text);
+      margin-bottom: 0.7rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+    }
+    .faq-q::after { content: '+'; color: var(--gold); font-size: 1.2rem; flex-shrink: 0; }
+    .faq-a { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+    .map-section {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px;
+      overflow: hidden; position: relative; height: 300px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .map-placeholder {
+      text-align: center; color: var(--text-dim);
+    }
+    .map-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .map-pin {
+      width: 20px; height: 20px; background: var(--accent); border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg); position: relative; z-index: 1;
+      box-shadow: 0 0 20px var(--accent);
+      animation: pinPulse 2s ease-in-out infinite;
+    }
+    @keyframes pinPulse {
+      0%, 100% { box-shadow: 0 0 20px var(--accent); }
+      50% { box-shadow: 0 0 40px var(--accent), 0 0 60px rgba(230,57,70,0.3); }
+    }
+    .success-msg {
+      display: none; background: rgba(201,168,76,0.1); border: 1px solid var(--gold);
+      border-radius: 4px; padding: 1rem 1.5rem;
+      color: var(--gold); font-size: 0.9rem; text-align: center;
+    }
+    .success-msg.show { display: block; }
+    @media (max-width: 900px) {
+      .faq-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="page-loader">
+  <div><div class="loader-logo">C M</div><div class="loader-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-logo">C<span>●</span>M</a>
+  <ul class="nav-links">
+    <li><a href="index.html" data-t="nav_home">Home</a></li>
+    <li><a href="movies.html" data-t="nav_movies">Movies</a></li>
+    <li><a href="about.html" data-t="nav_about">About</a></li>
+    <li><a href="contact.html" class="active" data-t="nav_contact">Contact</a></li>
+  </ul>
+  <div class="nav-lang">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="ar">عر</button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-grid"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <p style="font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem">Get in Touch</p>
+    <h1 class="page-title" data-t="nav_contact">Contact</h1>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrapper">
+  <div class="marquee-track"></div>
+</div>
+
+<!-- CONTACT MAIN -->
+<section>
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- Contact Info -->
+      <div class="contact-info reveal">
+        <div>
+          <div class="section-tag">Contact Us</div>
+          <h2 style="font-family:'Cinzel',serif;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--text);margin-bottom:1rem;line-height:1.2">
+            We'd Love to<br><span style="color:var(--gold)">Hear From You</span>
+          </h2>
+          <p style="color:var(--text-dim);line-height:1.8;margin-bottom:2rem">
+            Have a question, suggestion, or want to partner with us? Our team is available around the clock to assist you.
+          </p>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:0.3rem">Address</div>
+            <div style="color:var(--text-dim);font-size:0.9rem;line-height:1.6">12 Rue du Cinéma, 75001 Paris<br>France</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:0.3rem">Email</div>
+            <div style="color:var(--text-dim);font-size:0.9rem">contact@cinema-magnifique.com<br>support@cinema-magnifique.com</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:0.3rem">Phone</div>
+            <div style="color:var(--text-dim);font-size:0.9rem">+33 1 42 86 88 90<br>+212 522 XXX XXX</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon">🕐</div>
+          <div>
+            <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:0.3rem">Hours</div>
+            <div style="color:var(--text-dim);font-size:0.9rem">Monday – Friday: 9am – 6pm<br>Weekend: 10am – 4pm</div>
+          </div>
+        </div>
+
+        <!-- Social -->
+        <div>
+          <div style="font-family:'Cinzel',serif;font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin-bottom:1rem">Follow Us</div>
+          <div class="social-links">
+            <a href="#" class="social-link" title="Twitter">𝕏</a>
+            <a href="#" class="social-link" title="Facebook">f</a>
+            <a href="#" class="social-link" title="YouTube">▶</a>
+            <a href="#" class="social-link" title="Instagram">📷</a>
+            <a href="#" class="social-link" title="TikTok">🎵</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="reveal reveal-delay-2">
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:4px;padding:2.5rem">
+          <h3 style="font-family:'Cinzel',serif;font-size:1.2rem;color:var(--text);margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border)">
+            Send Us a Message
+          </h3>
+
+          <div id="success-msg" class="success-msg">
+            ✓ Message sent successfully! We'll get back to you within 24 hours.
+          </div>
+
+          <form class="contact-form" id="contact-form" onsubmit="handleSubmit(event)">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-input" placeholder="John" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-input" placeholder="Doe" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="john@example.com" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <select class="form-input" style="cursor:none">
+                <option>General Inquiry</option>
+                <option>Technical Support</option>
+                <option>Partnership</option>
+                <option>Press & Media</option>
+                <option>Film Submission</option>
+                <option>Billing</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea class="form-textarea" rows="6" placeholder="Tell us how we can help you..." required></textarea>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem">
+              <input type="checkbox" id="agree" required>
+              <label for="agree" style="font-size:0.8rem;color:var(--text-dim);cursor:none">
+                I agree to the <a href="#" style="color:var(--gold)">Privacy Policy</a> and <a href="#" style="color:var(--gold)">Terms of Service</a>
+              </label>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;cursor:none;padding:1rem">
+              Send Message →
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- MAP SECTION -->
+<section style="padding:0 0 5rem">
+  <div class="container">
+    <div class="reveal">
+      <h3 style="font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem">
+        Find Us
+      </h3>
+      <div class="map-section">
+        <div class="map-bg"></div>
+        <div class="map-placeholder" style="position:relative;z-index:1">
+          <div class="map-pin" style="margin:0 auto 1.5rem"></div>
+          <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text);margin-bottom:0.3rem">Cinéma Magnifique HQ</div>
+          <div style="font-size:0.82rem;color:var(--text-dim)">12 Rue du Cinéma, 75001 Paris, France</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">Help</div>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="faq-grid reveal">
+      <div class="faq-item">
+        <div class="faq-q">How do I create an account?</div>
+        <div class="faq-a">Click on the "Join" button in the navigation bar and fill in your details. Account creation is free and takes less than 2 minutes.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What languages are subtitles available in?</div>
+        <div class="faq-a">We offer subtitles in over 40 languages including English, French, Arabic, Spanish, German, Japanese, and many more.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I download films for offline viewing?</div>
+        <div class="faq-a">Yes! Premium and Business subscribers can download up to 25 films for offline viewing on mobile devices.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How do I submit a film for consideration?</div>
+        <div class="faq-a">Use the "Film Submission" option in the contact form above. Our curation team reviews all submissions within 30 days.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is the content available in 4K quality?</div>
+        <div class="faq-a">Over 3,000 titles are available in 4K Ultra HD with HDR10 and Dolby Vision support on compatible devices.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How do I cancel my subscription?</div>
+        <div class="faq-a">You can cancel anytime from your account settings. Your access continues until the end of your billing period with no penalties.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">C<span style="color:var(--accent)">●</span>M</a>
+        <p class="footer-desc" data-t="footer_desc">The ultimate destination for cinema lovers.</p>
+        <div class="social-links">
+          <a href="#" class="social-link">𝕏</a>
+          <a href="#" class="social-link">f</a>
+          <a href="#" class="social-link">▶</a>
+          <a href="#" class="social-link">📷</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_links">Quick Links</h4>
+        <ul>
+          <li><a href="index.html" data-t="nav_home">Home</a></li>
+          <li><a href="movies.html" data-t="nav_movies">Movies</a></li>
+          <li><a href="about.html" data-t="nav_about">About</a></li>
+          <li><a href="contact.html" data-t="nav_contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_genres">Genres</h4>
+        <ul>
+          <li><a href="#" data-t="cat_action">Action</a></li>
+          <li><a href="#" data-t="cat_drama">Drama</a></li>
+          <li><a href="#" data-t="cat_sci">Sci-Fi</a></li>
+          <li><a href="#" data-t="cat_comedy">Comedy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_info">Information</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Help Center</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Cinéma Magnifique. <span data-t="footer_rights">All rights reserved</span>.</span>
+      <span style="color:var(--gold)">C●M</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById('success-msg').classList.add('show');
+    e.target.reset();
+    btn.textContent = 'Send Message →';
+    btn.disabled = false;
+    window.scrollTo({ top: document.getElementById('success-msg').offsetTop - 100, behavior: 'smooth' });
+  }, 1500);
+}
+</script>
+</body>
+</html>

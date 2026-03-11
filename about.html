@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Cinéma Magnifique</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Raleway:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    .timeline {
+      position: relative; padding: 2rem 0;
+    }
+    .timeline::before {
+      content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      transform: translateX(-50%);
+    }
+    .timeline-item {
+      display: flex; gap: 3rem; margin-bottom: 4rem; align-items: flex-start;
+    }
+    .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
+    .timeline-content {
+      flex: 1; background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 2rem; position: relative;
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+    .timeline-content:hover {
+      border-color: rgba(201,168,76,0.4);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(201,168,76,0.1);
+    }
+    .timeline-year {
+      flex-shrink: 0; width: 80px; text-align: center; margin-top: 1rem;
+      font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 900; color: var(--gold);
+    }
+    .timeline-dot {
+      position: absolute; width: 12px; height: 12px; background: var(--gold); border-radius: 50%;
+      top: 1.5rem; box-shadow: 0 0 15px rgba(201,168,76,0.6);
+    }
+    .timeline-item:nth-child(odd) .timeline-dot { right: -6px; }
+    .timeline-item:nth-child(even) .timeline-dot { left: -6px; }
+    .timeline-title {
+      font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--text); margin-bottom: 0.7rem;
+    }
+    .timeline-desc { font-size: 0.9rem; color: var(--text-dim); line-height: 1.7; }
+
+    .values-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    }
+    .value-card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 4px;
+      padding: 2.5rem; text-align: center; transition: all 0.4s; position: relative; overflow: hidden;
+    }
+    .value-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(201,168,76,0.08), transparent);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .value-card:hover::before { opacity: 1; }
+    .value-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-5px); }
+    .value-icon {
+      font-size: 3rem; margin-bottom: 1.2rem; display: block;
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+    .value-card:nth-child(2) .value-icon { animation-delay: -1s; }
+    .value-card:nth-child(3) .value-icon { animation-delay: -2s; }
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    .value-title {
+      font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold); margin-bottom: 0.7rem;
+    }
+    .value-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+
+    .awards-section {
+      background: linear-gradient(135deg, rgba(201,168,76,0.04) 0%, transparent 60%);
+      border: 1px solid var(--border); border-radius: 4px; padding: 3rem;
+    }
+    .awards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 2rem; }
+    .award-item { text-align: center; }
+    .award-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .award-name { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+    .award-year { font-size: 0.7rem; color: var(--text-dim); }
+
+    @media (max-width: 900px) {
+      .timeline::before { left: 30px; }
+      .timeline-item, .timeline-item:nth-child(odd) { flex-direction: column; padding-left: 70px; }
+      .timeline-year { margin: 0 0 1rem; }
+      .timeline-dot { left: 24px !important; right: auto !important; }
+      .values-grid { grid-template-columns: 1fr; }
+      .awards-grid { grid-template-columns: repeat(2, 1fr); }
+      .team-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="page-loader">
+  <div><div class="loader-logo">C M</div><div class="loader-bar"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-logo">C<span>●</span>M</a>
+  <ul class="nav-links">
+    <li><a href="index.html" data-t="nav_home">Home</a></li>
+    <li><a href="movies.html" data-t="nav_movies">Movies</a></li>
+    <li><a href="about.html" class="active" data-t="nav_about">About</a></li>
+    <li><a href="contact.html" data-t="nav_contact">Contact</a></li>
+  </ul>
+  <div class="nav-lang">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="ar">عر</button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-grid"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <p style="font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem">Our Story</p>
+    <h1 class="page-title" data-t="nav_about">About</h1>
+  </div>
+</div>
+
+<!-- ABOUT INTRO -->
+<section>
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="section-tag">Who We Are</div>
+        <h2 style="font-family:'Cinzel',serif;font-size:clamp(1.8rem,3vw,2.8rem);color:var(--text);margin-bottom:1.5rem;line-height:1.2">
+          Passionate About<br><span style="color:var(--gold)">Cinema</span>
+        </h2>
+        <p style="color:var(--text-dim);line-height:1.9;margin-bottom:1.5rem;font-size:1rem">
+          Founded in 2015, Cinéma Magnifique was born from a deep love of the seventh art. We believe that great cinema has the power to transform perspectives, ignite emotions, and connect people across cultures and languages.
+        </p>
+        <p style="color:var(--text-dim);line-height:1.9;margin-bottom:2rem;font-size:1rem">
+          Our platform brings together over 12,000 films from 150 countries, curated by a passionate team of cinephiles, critics, and filmmakers. From Hollywood blockbusters to intimate arthouse gems, we celebrate the full spectrum of cinematic expression.
+        </p>
+        <a href="movies.html" class="btn-primary" data-t="hero_cta1">Explore Films</a>
+      </div>
+      <div class="about-visual reveal reveal-delay-1">
+        <div class="about-card-3d">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem">
+            <div>
+              <div class="stat-big">12K+</div>
+              <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim)">Films</div>
+            </div>
+            <div>
+              <div class="stat-big">4M+</div>
+              <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim)">Members</div>
+            </div>
+            <div>
+              <div class="stat-big">150+</div>
+              <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim)">Countries</div>
+            </div>
+            <div>
+              <div class="stat-big">98%</div>
+              <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim)">Satisfaction</div>
+            </div>
+          </div>
+          <div style="padding-top:2rem;border-top:1px solid var(--border);text-align:center">
+            <div style="font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);margin-bottom:0.5rem">★ 4.9</div>
+            <div style="font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim)">Average User Rating</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section style="background:rgba(10,10,20,0.5)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">Our Philosophy</div>
+      <h2 class="section-title">What We Stand For</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="values-grid reveal">
+      <div class="value-card">
+        <span class="value-icon">🎬</span>
+        <h3 class="value-title">Curatorial Excellence</h3>
+        <p class="value-text">Every film in our catalog is handpicked by our team of expert curators who consider artistic merit, cultural significance, and storytelling craft.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon">🌍</span>
+        <h3 class="value-title">Global Perspective</h3>
+        <p class="value-text">Cinema is universal. We champion films from every corner of the world, supporting both independent filmmakers and major studios.</p>
+      </div>
+      <div class="value-card">
+        <span class="value-icon">♿</span>
+        <h3 class="value-title">Accessibility First</h3>
+        <p class="value-text">Our platform is available in multiple languages with subtitles, audio descriptions, and adaptive interfaces for all users.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section>
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">History</div>
+      <h2 class="section-title">Our Journey</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-dot"></div>
+          <h3 class="timeline-title">The Beginning</h3>
+          <p class="timeline-desc">Cinéma Magnifique was founded by three film enthusiasts who wanted to create a platform that truly honored the art of cinema. Starting with 500 curated titles.</p>
+        </div>
+        <div class="timeline-year">2015</div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-dot"></div>
+          <h3 class="timeline-title">International Expansion</h3>
+          <p class="timeline-desc">We expanded our catalog to include films from 50 countries and launched support for 12 languages, reaching our first million users.</p>
+        </div>
+        <div class="timeline-year">2017</div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-dot"></div>
+          <h3 class="timeline-title">Award Recognition</h3>
+          <p class="timeline-desc">Named "Best Streaming Platform" by the International Cinema Federation. Our editorial team won the Critics' Choice for best film curation.</p>
+        </div>
+        <div class="timeline-year">2019</div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-dot"></div>
+          <h3 class="timeline-title">4K Revolution</h3>
+          <p class="timeline-desc">Launched our 4K Ultra HD library with Dolby Vision and Atmos support. Partnered with major studios for exclusive director's cut releases.</p>
+        </div>
+        <div class="timeline-year">2021</div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-content">
+          <div class="timeline-dot"></div>
+          <h3 class="timeline-title">4 Million Members</h3>
+          <p class="timeline-desc">Reached 4 million active members worldwide. Launched our mobile apps in Arabic, French, and English with full RTL support.</p>
+        </div>
+        <div class="timeline-year">2024</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section style="background:rgba(10,10,20,0.5)">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-tag">People</div>
+      <h2 class="section-title">Our Team</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="team-grid reveal" style="grid-template-columns:repeat(4,1fr)">
+      <div class="team-card">
+        <div class="team-avatar">🎬</div>
+        <div class="team-name">Alexandre Dubois</div>
+        <div class="team-role">Founder & CEO</div>
+        <p style="font-size:0.78rem;color:var(--text-dim);margin-top:0.8rem;line-height:1.6">Former film critic for Le Monde. 20 years of cinema expertise.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🎭</div>
+        <div class="team-name">Sofia Marchetti</div>
+        <div class="team-role">Head of Curation</div>
+        <p style="font-size:0.78rem;color:var(--text-dim);margin-top:0.8rem;line-height:1.6">Cannes Film Festival alumni. Champion of world cinema.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">⚡</div>
+        <div class="team-name">Karim Benali</div>
+        <div class="team-role">CTO</div>
+        <p style="font-size:0.78rem;color:var(--text-dim);margin-top:0.8rem;line-height:1.6">Tech visionary. Built streaming infrastructure for 150 countries.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🌍</div>
+        <div class="team-name">Yuki Tanaka</div>
+        <div class="team-role">Global Relations</div>
+        <p style="font-size:0.78rem;color:var(--text-dim);margin-top:0.8rem;line-height:1.6">Connects us with filmmakers and studios across the globe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section>
+  <div class="container">
+    <div class="awards-section reveal">
+      <div class="section-tag">Recognition</div>
+      <h2 class="section-title" style="margin-bottom:0">Awards & Accolades</h2>
+      <div class="awards-grid">
+        <div class="award-item">
+          <div class="award-icon">🏆</div>
+          <div class="award-name">Best Platform</div>
+          <div class="award-year">ICF Awards 2019</div>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">🥇</div>
+          <div class="award-name">Top Curation</div>
+          <div class="award-year">Critics' Choice 2021</div>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">⭐</div>
+          <div class="award-name">4K Excellence</div>
+          <div class="award-year">Digital Cinema 2022</div>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">🎖️</div>
+          <div class="award-name">Best Multilingual</div>
+          <div class="award-year">WebAwards 2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">C<span style="color:var(--accent)">●</span>M</a>
+        <p class="footer-desc" data-t="footer_desc">The ultimate destination for cinema lovers.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_links">Quick Links</h4>
+        <ul>
+          <li><a href="index.html" data-t="nav_home">Home</a></li>
+          <li><a href="movies.html" data-t="nav_movies">Movies</a></li>
+          <li><a href="about.html" data-t="nav_about">About</a></li>
+          <li><a href="contact.html" data-t="nav_contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_genres">Genres</h4>
+        <ul>
+          <li><a href="#" data-t="cat_action">Action</a></li>
+          <li><a href="#" data-t="cat_drama">Drama</a></li>
+          <li><a href="#" data-t="cat_sci">Sci-Fi</a></li>
+          <li><a href="#" data-t="cat_comedy">Comedy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_info">Information</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Help Center</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Cinéma Magnifique. <span data-t="footer_rights">All rights reserved</span>.</span>
+      <span style="color:var(--gold)">C●M</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

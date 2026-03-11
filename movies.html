@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movies — Cinéma Magnifique</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Raleway:wght@300;400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    .movies-hero {
+      padding: 8rem 0 4rem; position: relative; overflow: hidden;
+      background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 60%), var(--black);
+    }
+    .movies-hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+    }
+    .sort-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+    }
+    .results-count { font-size: 0.85rem; color: var(--text-dim); }
+    .sort-select {
+      background: var(--card-bg); border: 1px solid var(--border);
+      color: var(--text); padding: 0.5rem 1rem; font-size: 0.8rem;
+      font-family: inherit; cursor: none; border-radius: 2px;
+    }
+    .sort-select:focus { outline: none; border-color: var(--gold); }
+    .load-more {
+      text-align: center; margin-top: 4rem;
+    }
+    .card-year { font-size: 0.72rem; color: var(--text-dim); }
+    .top-picks {
+      padding: 4rem 0 2rem;
+      background: linear-gradient(135deg, rgba(201,168,76,0.04), transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .top-picks-scroll {
+      display: flex; gap: 1.5rem; overflow-x: auto; padding-bottom: 1rem;
+      scrollbar-width: none;
+    }
+    .top-picks-scroll::-webkit-scrollbar { display: none; }
+    .top-pick-item {
+      flex-shrink: 0; width: 150px; cursor: none;
+    }
+    .top-pick-poster {
+      width: 150px; height: 225px; border-radius: 4px; overflow: hidden;
+      border: 1px solid var(--border); position: relative;
+      background: var(--card-bg); margin-bottom: 0.8rem;
+      transition: transform 0.4s, box-shadow 0.4s;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0.5rem;
+    }
+    .top-pick-item:hover .top-pick-poster {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(201,168,76,0.15);
+      border-color: rgba(201,168,76,0.4);
+    }
+    .top-pick-rank {
+      position: absolute; top: 8px; left: 8px;
+      font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900;
+      color: var(--gold); opacity: 0.7;
+    }
+    .top-pick-title {
+      font-size: 0.78rem; color: var(--text); font-weight: 600;
+      letter-spacing: 0.03em; line-height: 1.3; text-align: center; padding: 0 0.5rem;
+    }
+    .top-pick-rating { font-size: 0.7rem; color: var(--gold); }
+    .sidebar-layout {
+      display: grid; grid-template-columns: 250px 1fr; gap: 3rem; align-items: start;
+    }
+    .sidebar {
+      position: sticky; top: 90px;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 4px; padding: 1.5rem;
+    }
+    .sidebar h3 {
+      font-family: 'Cinzel', serif; font-size: 0.9rem; color: var(--gold);
+      letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.2rem;
+    }
+    .sidebar-section { margin-bottom: 2rem; }
+    .sidebar-section h4 {
+      font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 0.8rem;
+    }
+    .genre-filter-list { display: flex; flex-direction: column; gap: 0.4rem; }
+    .genre-filter-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.4rem 0.6rem; border-radius: 2px; cursor: none;
+      transition: all 0.3s; font-size: 0.82rem; color: var(--text-dim);
+      border: 1px solid transparent;
+    }
+    .genre-filter-item:hover, .genre-filter-item.active {
+      color: var(--gold); background: rgba(201,168,76,0.08); border-color: var(--border);
+    }
+    .genre-count { font-size: 0.68rem; color: var(--text-dim); }
+    .rating-filter { display: flex; flex-direction: column; gap: 0.4rem; }
+    .rating-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.82rem; color: var(--text-dim); cursor: none;
+      padding: 0.3rem 0;
+    }
+    .rating-stars { color: var(--gold); font-size: 0.8rem; }
+    @media (max-width: 900px) { .sidebar-layout { grid-template-columns: 1fr; } .sidebar { position: static; } }
+  </style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="page-loader">
+  <div>
+    <div class="loader-logo">C M</div>
+    <div class="loader-bar"></div>
+  </div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="index.html" class="nav-logo">C<span>●</span>M</a>
+  <ul class="nav-links">
+    <li><a href="index.html" data-t="nav_home">Home</a></li>
+    <li><a href="movies.html" class="active" data-t="nav_movies">Movies</a></li>
+    <li><a href="about.html" data-t="nav_about">About</a></li>
+    <li><a href="contact.html" data-t="nav_contact">Contact</a></li>
+  </ul>
+  <div class="nav-lang">
+    <button class="lang-btn active" data-lang="en">EN</button>
+    <button class="lang-btn" data-lang="fr">FR</button>
+    <button class="lang-btn" data-lang="ar">عر</button>
+  </div>
+</nav>
+
+<!-- MOVIES HERO -->
+<div class="movies-hero">
+  <div class="movies-hero-grid"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <p style="font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem" data-t="featured_tag">Selection</p>
+    <h1 class="page-title" data-t="nav_movies">Movies</h1>
+    <p style="color:var(--text-dim);margin-top:1rem;font-size:1rem;max-width:500px" data-t="hero_sub">Discover the world's greatest films in stunning quality</p>
+  </div>
+</div>
+
+<!-- TOP PICKS -->
+<div class="top-picks">
+  <div class="container">
+    <div class="section-header" style="text-align:left;margin-bottom:2rem">
+      <div class="section-tag">Top 10</div>
+      <h2 class="section-title" style="font-size:1.5rem">Most Popular This Week</h2>
+    </div>
+    <div class="top-picks-scroll">
+      <!-- Rank 1 -->
+      <div class="top-pick-item">
+        <div class="top-pick-poster">
+          <span class="top-pick-rank">01</span>
+          <span style="font-size:3.5rem">🏜️</span>
+          <span class="top-pick-title">Dune: Part Two</span>
+        </div>
+        <div class="top-pick-title">Dune: Part Two</div>
+        <div class="top-pick-rating">★ 8.5</div>
+      </div>
+      <!-- Rank 2 -->
+      <div class="top-pick-item">
+        <div class="top-pick-poster">
+          <span class="top-pick-rank">02</span>
+          <span style="font-size:3.5rem">🔥</span>
+          <span class="top-pick-title">Oppenheimer</span>
+        </div>
+        <div class="top-pick-title">Oppenheimer</div>
+        <div class="top-pick-rating">★ 8.9</div>
+      </div>
+      <!-- Rank 3 -->
+      <div class="top-pick-item">
+        <div class="top-pick-poster">
+          <span class="top-pick-rank">03</span>
+          <span style="font-size:3.5rem">🎭</span>
+          <span class="top-pick-title">Poor Things</span>
+        </div>
+        <div class="top-pick-title">Poor Things</div>
+        <div class="top-pick-rating">★ 8.0</div>
+      </div>
+      <!-- Rank 4 -->
+      <div class="top-pick-item">
+        <div class="top-pick-poster">
+          <span class="top-pick-rank">04</span>
+          <span style="font-size:3.5rem">🌊</span>
+          <span class="top-pick-title">Past Lives</span>
+        </div>
+        <div class="top-pick-title">Past Lives</div>
+        <div class="top-pick-rating">★ 7.9</div>
+      </div>
+      <!-- Rank 5 -->
+      <div class="top-pick-item">
+        <div class="top-pick-poster">
+          <span class="top-pick-rank">05</span>
+          <span style="font-size:3.5rem">👑</span>
+          <span class="top-pick-title">Napoleon</span>
+        </div>
+        <div class="top-pick-title">Napoleon</div>
+        <div class="top-pick-rating">★ 6.9</div>
+      </div>
+      <!-- Rank 6 -->
+      <div class="top-pick-item">
+        <div class="top-pick-poster">
+          <span class="top-pick-rank">06</span>
+          <span style="font-size:3.5rem">🤖</span>
+          <span class="top-pick-title">M:I Dead Reckoning</span>
+        </div>
+        <div class="top-pick-title">M:I Dead Reckoning</div>
+        <div class="top-pick-rating">★ 7.8</div>
+      </div>
+      <!-- Rank 7 -->
+      <div class="top-pick-item">
+        <div class="top-pick-poster">
+          <span class="top-pick-rank">07</span>
+          <span style="font-size:3.5rem">🧟</span>
+          <span class="top-pick-title">The Zone of Interest</span>
+        </div>
+        <div class="top-pick-title">The Zone of Interest</div>
+        <div class="top-pick-rating">★ 7.4</div>
+      </div>
+      <!-- Rank 8 -->
+      <div class="top-pick-item">
+        <div class="top-pick-poster">
+          <span class="top-pick-rank">08</span>
+          <span style="font-size:3.5rem">🎸</span>
+          <span class="top-pick-title">Priscilla</span>
+        </div>
+        <div class="top-pick-title">Priscilla</div>
+        <div class="top-pick-rating">★ 6.9</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CATALOG -->
+<section>
+  <div class="container">
+
+    <!-- Search & Filters -->
+    <div class="search-bar">
+      <input type="text" class="search-input" placeholder="Search films...">
+      <button class="btn-primary" style="padding:0.9rem 1.5rem;cursor:none">🔍</button>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" data-genre="all">All</button>
+      <button class="filter-btn" data-genre="action" data-t="cat_action">Action</button>
+      <button class="filter-btn" data-genre="drama" data-t="cat_drama">Drama</button>
+      <button class="filter-btn" data-genre="scifi" data-t="cat_sci">Sci-Fi</button>
+      <button class="filter-btn" data-genre="comedy" data-t="cat_comedy">Comedy</button>
+      <button class="filter-btn" data-genre="thriller" data-t="cat_thriller">Thriller</button>
+      <button class="filter-btn" data-genre="romance" data-t="cat_romance">Romance</button>
+      <button class="filter-btn" data-genre="horror" data-t="cat_horror">Horror</button>
+    </div>
+
+    <div class="sidebar-layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <h3>Filters</h3>
+
+        <div class="sidebar-section">
+          <h4>Genre</h4>
+          <div class="genre-filter-list">
+            <div class="genre-filter-item active" onclick="setFilter(this,'all')">
+              <span>All Genres</span><span class="genre-count">12,000</span>
+            </div>
+            <div class="genre-filter-item" onclick="setFilter(this,'action')">
+              <span data-t="cat_action">Action</span><span class="genre-count">2,340</span>
+            </div>
+            <div class="genre-filter-item" onclick="setFilter(this,'drama')">
+              <span data-t="cat_drama">Drama</span><span class="genre-count">3,120</span>
+            </div>
+            <div class="genre-filter-item" onclick="setFilter(this,'scifi')">
+              <span data-t="cat_sci">Sci-Fi</span><span class="genre-count">1,890</span>
+            </div>
+            <div class="genre-filter-item" onclick="setFilter(this,'comedy')">
+              <span data-t="cat_comedy">Comedy</span><span class="genre-count">2,650</span>
+            </div>
+            <div class="genre-filter-item" onclick="setFilter(this,'thriller')">
+              <span data-t="cat_thriller">Thriller</span><span class="genre-count">1,740</span>
+            </div>
+            <div class="genre-filter-item" onclick="setFilter(this,'romance')">
+              <span data-t="cat_romance">Romance</span><span class="genre-count">1,560</span>
+            </div>
+            <div class="genre-filter-item" onclick="setFilter(this,'horror')">
+              <span data-t="cat_horror">Horror</span><span class="genre-count">980</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h4>Rating</h4>
+          <div class="rating-filter">
+            <label class="rating-item"><input type="checkbox"> <span class="rating-stars">★★★★★</span> 9+</label>
+            <label class="rating-item"><input type="checkbox" checked> <span class="rating-stars">★★★★</span> 7+</label>
+            <label class="rating-item"><input type="checkbox"> <span class="rating-stars">★★★</span> 5+</label>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h4>Year</h4>
+          <div class="rating-filter">
+            <label class="rating-item"><input type="checkbox" checked> 2024–2025</label>
+            <label class="rating-item"><input type="checkbox" checked> 2020–2023</label>
+            <label class="rating-item"><input type="checkbox"> 2010–2019</label>
+            <label class="rating-item"><input type="checkbox"> Before 2010</label>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Movies Grid -->
+      <div>
+        <div class="sort-bar">
+          <span class="results-count" id="results-count">Showing <strong>12</strong> films</span>
+          <select class="sort-select" onchange="sortMovies(this.value)">
+            <option>Sort: Most Popular</option>
+            <option>Sort: Rating ↓</option>
+            <option>Sort: Newest First</option>
+            <option>Sort: A–Z</option>
+          </select>
+        </div>
+
+        <div class="movies-grid" id="movies-grid">
+
+          <div class="movie-card" data-genre="scifi" data-rating="8.5" data-year="2024">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🏜️</span><span class="poster-title-fallback">Dune: Part Two</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <span class="card-badge badge-new">NEW</span>
+              <div class="card-rating">★ 8.5</div>
+              <div class="card-info">
+                <div class="card-title">Dune: Part Two</div>
+                <div class="card-meta"><span class="card-year">2024</span><span class="card-genre">Sci-Fi</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="drama" data-rating="8.9" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🔥</span><span class="poster-title-fallback">Oppenheimer</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <span class="card-badge badge-top">TOP</span>
+              <div class="card-rating">★ 8.9</div>
+              <div class="card-info">
+                <div class="card-title">Oppenheimer</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">Drama</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="drama" data-rating="8.0" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🎭</span><span class="poster-title-fallback">Poor Things</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <span class="card-badge badge-top">AWARD</span>
+              <div class="card-rating">★ 8.0</div>
+              <div class="card-info">
+                <div class="card-title">Poor Things</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">Drama</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="romance" data-rating="7.9" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🌊</span><span class="poster-title-fallback">Past Lives</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <span class="card-badge badge-exclusive">EXCLU</span>
+              <div class="card-rating">★ 7.9</div>
+              <div class="card-info">
+                <div class="card-title">Past Lives</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">Romance</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="action" data-rating="7.8" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🤖</span><span class="poster-title-fallback">Mission Impossible 7</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <div class="card-rating">★ 7.8</div>
+              <div class="card-info">
+                <div class="card-title">Mission: Impossible 7</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">Action</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="drama" data-rating="7.7" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🎸</span><span class="poster-title-fallback">Killers of the Flower Moon</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <span class="card-badge badge-top">TOP</span>
+              <div class="card-rating">★ 7.7</div>
+              <div class="card-info">
+                <div class="card-title">Killers of the Flower Moon</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">History</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="scifi" data-rating="7.6" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">⚡</span><span class="poster-title-fallback">The Flash</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <div class="card-rating">★ 7.6</div>
+              <div class="card-info">
+                <div class="card-title">The Flash</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">Sci-Fi</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="comedy" data-rating="7.2" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🌸</span><span class="poster-title-fallback">Barbie</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <span class="card-badge badge-new">HIT</span>
+              <div class="card-rating">★ 7.2</div>
+              <div class="card-info">
+                <div class="card-title">Barbie</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">Comedy</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="thriller" data-rating="7.4" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🏰</span><span class="poster-title-fallback">Napoleon</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <div class="card-rating">★ 7.4</div>
+              <div class="card-info">
+                <div class="card-title">Napoleon</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">History</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="horror" data-rating="7.1" data-year="2023">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">👁️</span><span class="poster-title-fallback">M3GAN</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <div class="card-rating">★ 7.1</div>
+              <div class="card-info">
+                <div class="card-title">M3GAN</div>
+                <div class="card-meta"><span class="card-year">2023</span><span class="card-genre">Horror</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="action" data-rating="8.2" data-year="2024">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🐉</span><span class="poster-title-fallback">Godzilla x Kong</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <span class="card-badge badge-new">NEW</span>
+              <div class="card-rating">★ 8.2</div>
+              <div class="card-info">
+                <div class="card-title">Godzilla x Kong</div>
+                <div class="card-meta"><span class="card-year">2024</span><span class="card-genre">Action</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="movie-card" data-genre="drama" data-rating="7.8" data-year="2024">
+            <div class="card-inner">
+              <div class="card-poster">
+                <div class="card-poster-fallback"><span class="poster-icon">🌍</span><span class="poster-title-fallback">Civil War</span></div>
+                <div class="card-overlay"><div class="play-btn">▶</div></div>
+              </div>
+              <div class="card-rating">★ 7.8</div>
+              <div class="card-info">
+                <div class="card-title">Civil War</div>
+                <div class="card-meta"><span class="card-year">2024</span><span class="card-genre">Drama</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end movies-grid -->
+
+        <div class="load-more reveal">
+          <button class="btn-secondary" style="cursor:none" onclick="loadMore()">Load More Films</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">C<span style="color:var(--accent)">●</span>M</a>
+        <p class="footer-desc" data-t="footer_desc">The ultimate destination for cinema lovers.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_links">Quick Links</h4>
+        <ul>
+          <li><a href="index.html" data-t="nav_home">Home</a></li>
+          <li><a href="movies.html" data-t="nav_movies">Movies</a></li>
+          <li><a href="about.html" data-t="nav_about">About</a></li>
+          <li><a href="contact.html" data-t="nav_contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_genres">Genres</h4>
+        <ul>
+          <li><a href="#" data-t="cat_action">Action</a></li>
+          <li><a href="#" data-t="cat_drama">Drama</a></li>
+          <li><a href="#" data-t="cat_sci">Sci-Fi</a></li>
+          <li><a href="#" data-t="cat_comedy">Comedy</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-t="footer_info">Information</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Help Center</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Cinéma Magnifique. <span data-t="footer_rights">All rights reserved</span>.</span>
+      <span style="color:var(--gold)">C●M</span>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+function setFilter(el, genre) {
+  document.querySelectorAll('.genre-filter-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  filterMovies(genre);
+}
+
+function sortMovies(val) {
+  const grid = document.getElementById('movies-grid');
+  const cards = [...grid.querySelectorAll('.movie-card')];
+  cards.sort((a, b) => {
+    if (val.includes('Rating')) return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+    if (val.includes('Newest')) return parseInt(b.dataset.year) - parseInt(a.dataset.year);
+    if (val.includes('A–Z')) return a.querySelector('.card-title').textContent.localeCompare(b.querySelector('.card-title').textContent);
+    return 0;
+  });
+  cards.forEach(c => grid.appendChild(c));
+}
+
+function loadMore() {
+  // Simulate loading more
+  const btn = document.querySelector('.load-more button');
+  btn.textContent = 'Loading...';
+  setTimeout(() => { btn.textContent = 'No More Films'; btn.disabled = true; }, 1500);
+}
+</script>
+</body>
+</html>
