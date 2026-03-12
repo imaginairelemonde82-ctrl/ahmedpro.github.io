@@ -1,4 +1,3 @@
-
 # Universal Video Downloader
 
 Supports:

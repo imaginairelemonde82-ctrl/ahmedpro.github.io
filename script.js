@@ -1,4 +1,3 @@
-
 const downloadBtn = document.getElementById('downloadBtn');
 const urlInput = document.getElementById('urlInput');
 const formatSelect = document.getElementById('formatSelect');
