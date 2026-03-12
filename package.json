@@ -1,9 +1,9 @@
-
 {
   "name": "video-downloader",
-  "version": "1.0.0",
-  "description": "Universal Video Downloader",
+  "version": "1.0.1",
+  "description": "Universal Video Downloader - Download from YouTube, TikTok, Instagram, Facebook, Snapchat, Twitter",
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node server.js"
   },

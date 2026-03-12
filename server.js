@@ -1,9 +1,9 @@
 
 const express = require('express');
 const cors = require('cors');
-const { YtDlpWrap } = require('yt-dlp-wrap');
 const path = require('path');
 const fs = require('fs');
+const { YtDlpWrap } = require('yt-dlp-wrap');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,33 +22,53 @@ app.post('/download', async (req, res) => {
   if (!url) return res.status(400).json({ error: 'URL is required' });
 
   try {
-    const outputPath = path.join(DOWNLOAD_DIR, `video-${Date.now()}.%(ext)s`);
-    let args = ['-o', outputPath];
+    const outputTemplate = path.join(DOWNLOAD_DIR, `video-${Date.now()}.%(ext)s`);
 
-    if (format === 'mp3') {
-      args.push('-x', '--audio-format', 'mp3');
+    let args = [
+      url,
+      "-o", outputTemplate
+    ];
+
+    if (format === "mp3") {
+      args.push("-x");
+      args.push("--audio-format");
+      args.push("mp3");
     }
 
-    await ytdlp.execPromise([url, ...args]);
+    await ytdlp.execPromise(args);
 
     const files = fs.readdirSync(DOWNLOAD_DIR);
     const latest = files
-      .map(f => path.join(DOWNLOAD_DIR, f))
-      .sort((a,b)=>fs.statSync(b).mtime - fs.statSync(a).mtime)[0];
+      .map(f => ({
+        name: f,
+        time: fs.statSync(path.join(DOWNLOAD_DIR, f)).mtime.getTime()
+      }))
+      .sort((a,b)=>b.time-a.time)[0];
 
-    res.json({ download: '/download/' + path.basename(latest) });
+    if(!latest) throw new Error("File not found");
 
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Download failed' });
+    res.json({ download: `/download/${latest.name}` });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to download video' });
   }
 });
 
-app.get('/download/:file', (req,res)=>{
+app.get('/download/:file', (req, res) => {
   const filePath = path.join(DOWNLOAD_DIR, req.params.file);
-  res.download(filePath, err=>{
-    if(!err) fs.unlinkSync(filePath);
+
+  if(!fs.existsSync(filePath)){
+    return res.status(404).send("File not found");
+  }
+
+  res.download(filePath, err => {
+    if (!err) {
+      try { fs.unlinkSync(filePath); } catch(e){}
+    }
   });
 });
 
-app.listen(PORT, ()=>console.log("Server running on port "+PORT));
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});

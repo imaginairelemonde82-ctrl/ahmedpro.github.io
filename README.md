@@ -1,20 +1,17 @@
 
 # Universal Video Downloader
 
-## Run locally
+Supports:
+- YouTube
+- TikTok
+- Instagram
+- Facebook
+- Twitter
+- Snapchat
 
-npm install
-node server.js
+Deploy on Render easily.
 
-Open:
-http://localhost:3000
-
-## Deploy on Render
-
-1. Push project to GitHub
-2. Connect repository to Render
-3. Build command:
-npm install
-
-Start command:
-node server.js
+Steps:
+1. Upload to GitHub
+2. Connect repo to Render
+3. Deploy

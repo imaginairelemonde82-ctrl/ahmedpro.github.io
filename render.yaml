@@ -4,5 +4,5 @@ services:
     name: video-downloader
     env: node
     plan: free
-    buildCommand: "npm install"
-    startCommand: "node server.js"
+    buildCommand: npm install
+    startCommand: node server.js
