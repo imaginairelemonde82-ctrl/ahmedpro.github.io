@@ -198,15 +198,11 @@ async function go() {
   prog(pf, 75, 2000);
 
   try {
-    const res = await fetch(`/api/download?url=${encodeURIComponent(url)}`);
-    const json = await res.json();
+    const data = await fetchVideo(url);
     prog(pf, 100, 300);
-
-    if (!json.success) throw new Error(json.error || 'فشل جلب الفيديو');
-
     setTimeout(() => {
       pw.classList.remove('on'); pf.style.width='0%';
-      render(json.data);
+      render(data);
     }, 400);
   } catch(e) {
     pw.classList.remove('on'); pf.style.width='0%';
@@ -214,6 +210,40 @@ async function go() {
   } finally {
     btn.classList.remove('busy');
   }
+}
+
+async function fetchVideo(url) {
+  // 1) Try our serverless proxy (works on Vercel)
+  try {
+    const res = await fetch(`/api/download?url=${encodeURIComponent(url)}`);
+    const text = await res.text();
+    // If response starts with < it's an HTML error page (local file), not JSON
+    if (text.trim().startsWith('<')) throw new Error('not_deployed');
+    const json = JSON.parse(text);
+    if (!json.success) throw new Error(json.error || 'فشل جلب الفيديو');
+    return json.data;
+  } catch(e) {
+    if (e.message === 'فشل جلب الفيديو') throw e;
+  }
+
+  // 2) Fallback: call tikwm directly (for local testing)
+  const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}&hd=1`);
+  const json = await res.json();
+  if (json.code !== 0 || !json.data) throw new Error(json.msg || 'فشل جلب الفيديو');
+  const d = json.data;
+  const links = [];
+  if (d.hdplay) links.push({ label: 'HD بدون علامة مائية', url: d.hdplay, type: 'hd' });
+  if (d.play)   links.push({ label: 'SD بدون علامة مائية', url: d.play,   type: 'sd' });
+  if (d.wmplay) links.push({ label: 'مع علامة مائية',      url: d.wmplay, type: 'wm' });
+  return {
+    title: d.title || 'TikTok Video',
+    author: d.author?.nickname || '',
+    cover: d.cover || d.origin_cover || '',
+    duration: d.duration || 0,
+    play_count: d.play_count || 0,
+    digg_count: d.digg_count || 0,
+    links
+  };
 }
 
 function render(d) {
