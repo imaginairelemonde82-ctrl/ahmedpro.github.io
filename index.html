@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikDown - تحميل فيديوهات TikTok</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #ffffff0f;
+    --accent: #ff2d55;
+    --accent2: #00f5d4;
+    --accent3: #fe9000;
+    --text: #f0f0f8;
+    --muted: #8888aa;
+    --glow: #ff2d5540;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,45,85,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,45,85,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blob-1 {
+    width: 500px; height: 500px;
+    background: rgba(255, 45, 85, 0.12);
+    top: -200px; left: -100px;
+    animation: blobFloat 8s ease-in-out infinite;
+  }
+  .blob-2 {
+    width: 400px; height: 400px;
+    background: rgba(0, 245, 212, 0.08);
+    bottom: 0; right: -150px;
+    animation: blobFloat 10s ease-in-out infinite reverse;
+  }
+  @keyframes blobFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(30px) scale(1.05); }
+  }
+
+  nav {
+    position: sticky; top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,0.6);
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 1.4rem; font-weight: 700;
+    color: var(--text); text-decoration: none;
+  }
+  .logo span { color: var(--accent); }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+  }
+  .nav-badge {
+    font-size: 0.7rem; padding: 3px 10px;
+    background: rgba(255,45,85,0.15);
+    border: 1px solid rgba(255,45,85,0.3);
+    border-radius: 20px; color: var(--accent);
+  }
+
+  .hero {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 80px 20px 60px;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 0.75rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent2);
+    border: 1px solid rgba(0,245,212,0.3);
+    padding: 5px 16px; border-radius: 20px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900; line-height: 1.1;
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p {
+    font-size: 1.1rem; color: var(--muted);
+    max-width: 500px; margin: 0 auto 50px;
+    line-height: 1.8;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .input-wrapper {
+    max-width: 700px; margin: 0 auto;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .input-box {
+    display: flex; align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 6px 6px 6px 20px;
+    gap: 10px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .input-box:focus-within {
+    border-color: rgba(255,45,85,0.5);
+    box-shadow: 0 0 0 3px rgba(255,45,85,0.1), 0 20px 40px rgba(0,0,0,0.3);
+  }
+  .input-icon { color: var(--accent); font-size: 1.2rem; flex-shrink: 0; }
+  .input-box input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--text); font-family: 'Cairo', sans-serif;
+    font-size: 1rem; padding: 12px 0; direction: ltr;
+  }
+  .input-box input::placeholder { color: var(--muted); font-size: 0.9rem; }
+
+  .btn-download {
+    background: linear-gradient(135deg, var(--accent), #c0002a);
+    color: white; border: none;
+    padding: 14px 28px; border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  }
+  .btn-download:hover { transform: scale(1.03); box-shadow: 0 8px 25px rgba(255,45,85,0.4); }
+  .btn-download:active { transform: scale(0.98); }
+  .btn-download.loading { pointer-events: none; opacity: 0.8; }
+  .btn-download .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white; border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    display: none;
+  }
+  .btn-download.loading .spinner { display: block; }
+  .btn-download.loading .btn-text { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .progress-wrap { max-width: 700px; margin: 16px auto 0; display: none; }
+  .progress-wrap.visible { display: block; }
+  .progress-bar { height: 3px; background: rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 10px; width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .error-msg {
+    max-width: 700px; margin: 16px auto 0;
+    background: rgba(255, 60, 60, 0.1);
+    border: 1px solid rgba(255, 60, 60, 0.25);
+    border-radius: 12px; padding: 14px 20px;
+    color: #ff6b6b; font-size: 0.9rem;
+    display: none; text-align: center;
+  }
+  .error-msg.visible { display: block; animation: fadeUp 0.3s ease; }
+
+  .result-area { max-width: 700px; margin: 24px auto 0; display: none; }
+  .result-area.visible { display: block; animation: fadeUp 0.4s ease; }
+
+  .result-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .result-thumb {
+    width: 80px; height: 100px; object-fit: cover;
+    border-radius: 10px; flex-shrink: 0;
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 2rem; overflow: hidden;
+  }
+  .result-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .result-info { flex: 1; min-width: 0; }
+  .result-title {
+    font-size: 0.95rem; font-weight: 600; margin-bottom: 8px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: ltr;
+  }
+  .result-meta { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .meta-tag {
+    font-size: 0.75rem; padding: 3px 10px; border-radius: 20px;
+    background: rgba(255,255,255,0.06); color: var(--muted);
+  }
+  .download-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .dl-btn {
+    display: flex; align-items: center; gap: 7px;
+    padding: 10px 18px; border-radius: 10px;
+    font-family: 'Cairo', sans-serif; font-size: 0.85rem; font-weight: 600;
+    text-decoration: none; cursor: pointer;
+    transition: all 0.2s; border: none;
+  }
+  .dl-btn-primary { background: linear-gradient(135deg, var(--accent), #c0002a); color: white; }
+  .dl-btn-secondary { background: rgba(255,255,255,0.07); color: var(--text); border: 1px solid var(--border); }
+  .dl-btn:hover { transform: translateY(-2px); }
+
+  .features {
+    position: relative; z-index: 1;
+    padding: 80px 20px; max-width: 1000px; margin: 0 auto;
+  }
+  .section-label {
+    text-align: center; font-size: 0.75rem;
+    letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 50px;
+  }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .feature-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .feature-card:hover { transform: translateY(-4px); border-color: rgba(255,45,85,0.3); }
+  .feature-icon { font-size: 1.8rem; margin-bottom: 14px; }
+  .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .feature-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
+
+  .steps {
+    position: relative; z-index: 1;
+    padding: 40px 20px 80px; max-width: 800px;
+    margin: 0 auto; text-align: center;
+  }
+  .steps h2 { font-size: 1.8rem; font-weight: 900; margin-bottom: 50px; }
+  .steps-row { display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; }
+  .step {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    flex: 1; min-width: 140px; max-width: 180px;
+  }
+  .step-num {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-weight: 700; font-size: 1rem;
+  }
+  .step p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+  /* How to deploy section */
+  .deploy-section {
+    position: relative; z-index: 1;
+    padding: 40px 20px 80px; max-width: 800px; margin: 0 auto;
+  }
+  .deploy-section h2 { font-size: 1.5rem; font-weight: 900; margin-bottom: 30px; text-align: center; }
+  .deploy-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .deploy-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px;
+  }
+  .deploy-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .deploy-card ol { padding-right: 20px; }
+  .deploy-card li { font-size: 0.85rem; color: var(--muted); line-height: 2; }
+  .deploy-card li strong { color: var(--text); }
+  .platform-tag {
+    font-size: 0.7rem; padding: 2px 8px;
+    border-radius: 6px; font-family: 'Space Mono', monospace;
+  }
+  .tag-vercel { background: rgba(255,255,255,0.1); color: #fff; }
+  .tag-netlify { background: rgba(0,245,212,0.15); color: var(--accent2); }
+
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 30px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    color: var(--muted); font-size: 0.8rem;
+    flex-wrap: wrap; gap: 10px;
+  }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  .platforms { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 30px; }
+  .platform-badge {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.8rem; color: var(--muted);
+    background: var(--card); border: 1px solid var(--border);
+    padding: 8px 16px; border-radius: 30px;
+  }
+  .platform-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent2); }
+
+  @media (max-width: 600px) {
+    nav { padding: 16px 20px; }
+    .hero { padding: 50px 16px 40px; }
+    .input-box { flex-wrap: wrap; padding: 12px; }
+    .input-box input { width: 100%; }
+    .btn-download { width: 100%; justify-content: center; }
+    .result-card { flex-direction: column; }
+    footer { justify-content: center; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">▶</div>
+    Tik<span>Down</span>
+  </a>
+  <span class="nav-badge">مجاني 100%</span>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">✦ بدون علامة مائية</div>
+  <h1>حمّل فيديوهات<br><span class="highlight">TikTok</span> بسهولة</h1>
+  <p>الصق رابط الفيديو واحصل على تحميل فوري بجودة عالية — بدون تطبيق، بدون تسجيل</p>
+
+  <div class="input-wrapper">
+    <div class="input-box">
+      <span class="input-icon">🔗</span>
+      <input
+        type="url"
+        id="urlInput"
+        placeholder="https://www.tiktok.com/@user/video/..."
+        autocomplete="off"
+      />
+      <button class="btn-download" id="downloadBtn" onclick="handleDownload()">
+        <div class="spinner"></div>
+        <span class="btn-text">⬇ تحميل</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="error-msg" id="errorMsg"></div>
+
+  <div class="result-area" id="resultArea">
+    <div class="result-card">
+      <div class="result-thumb" id="thumbArea">🎬</div>
+      <div class="result-info">
+        <div class="result-title" id="resultTitle">جاري تحميل معلومات الفيديو...</div>
+        <div class="result-meta" id="resultMeta"></div>
+        <div class="download-btns" id="downloadBtns"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="platforms">
+    <div class="platform-badge"><div class="platform-dot"></div> TikTok</div>
+    <div class="platform-badge"><div class="platform-dot"></div> Douyin</div>
+    <div class="platform-badge"><div class="platform-dot"></div> TikTok Lite</div>
+  </div>
+</section>
+
+<section class="steps">
+  <h2>كيف يعمل؟</h2>
+  <div class="steps-row">
+    <div class="step">
+      <div class="step-num">1</div>
+      <strong>انسخ الرابط</strong>
+      <p>افتح TikTok واضغط على "مشاركة" ثم "نسخ الرابط"</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <strong>الصق الرابط</strong>
+      <p>أدخل الرابط في مربع البحث أعلاه</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <strong>حمّل الفيديو</strong>
+      <p>اختر الجودة وابدأ التحميل مباشرة</p>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-label">لماذا TikDown؟</div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🚫</div>
+      <h3>بدون علامة مائية</h3>
+      <p>احصل على فيديو نظيف تماماً بدون شعار TikTok</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>سرعة فائقة</h3>
+      <p>معالجة فورية وتحميل سريع دون انتظار</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>جودة HD</h3>
+      <p>تحميل بأعلى جودة متاحة للفيديو الأصلي</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>آمن وخاص</h3>
+      <p>لا نحفظ أي فيديوهات أو بيانات خاصة بك</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>يعمل على كل الأجهزة</h3>
+      <p>موبايل، تابلت، أو كمبيوتر — يعمل في كل مكان</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💸</div>
+      <h3>مجاني تماماً</h3>
+      <p>لا تسجيل، لا اشتراك، لا رسوم مخفية</p>
+    </div>
+  </div>
+</section>
+
+<!-- Deploy Guide -->
+<section class="deploy-section">
+  <h2>🚀 كيف ترفع الموقع مجاناً؟</h2>
+  <div class="deploy-cards">
+    <div class="deploy-card">
+      <h3><span class="platform-tag tag-vercel">Vercel</span> الأسرع والأسهل</h3>
+      <ol>
+        <li>اذهب إلى <strong>vercel.com</strong></li>
+        <li>سجّل بحساب Google أو GitHub</li>
+        <li>اضغط <strong>Add New → Project</strong></li>
+        <li>ارفع مجلد المشروع كاملاً (index.html + api + vercel.json)</li>
+        <li>اضغط <strong>Deploy</strong> ✅</li>
+        <li>ستحصل على رابط مثل <strong>yoursite.vercel.app</strong></li>
+      </ol>
+    </div>
+    <div class="deploy-card">
+      <h3><span class="platform-tag tag-netlify">Netlify</span> بديل ممتاز</h3>
+      <ol>
+        <li>اذهب إلى <strong>netlify.com</strong></li>
+        <li>سجّل بحساب Google أو GitHub</li>
+        <li>اسحب مجلد المشروع وأفلته في الصفحة الرئيسية</li>
+        <li>انتظر ثوانٍ حتى ينتهي النشر ✅</li>
+        <li>ستحصل على رابط مثل <strong>yoursite.netlify.app</strong></li>
+        <li>يمكنك تغيير الاسم من الإعدادات</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2025 TikDown — جميع الحقوق محفوظة</span>
+  <div style="display:flex;gap:20px;">
+    <a href="#">سياسة الخصوصية</a>
+    <a href="#">شروط الاستخدام</a>
+    <a href="#">تواصل معنا</a>
+  </div>
+</footer>
+
+<script>
+  // Detect if running on Vercel (has proxy) or locally
+  const IS_DEPLOYED = window.location.hostname !== '127.0.0.1' && window.location.hostname !== 'localhost' && !window.location.protocol.startsWith('file');
+
+  async function handleDownload() {
+    const url = document.getElementById('urlInput').value.trim();
+    const btn = document.getElementById('downloadBtn');
+    const errorMsg = document.getElementById('errorMsg');
+    const resultArea = document.getElementById('resultArea');
+    const progressWrap = document.getElementById('progressWrap');
+    const progressFill = document.getElementById('progressFill');
+
+    errorMsg.classList.remove('visible');
+    resultArea.classList.remove('visible');
+
+    if (!url) { showError('⚠️ يرجى إدخال رابط الفيديو'); return; }
+    if (!isValidTikTokUrl(url)) { showError('⚠️ الرابط غير صحيح. يرجى إدخال رابط TikTok صحيح'); return; }
+
+    btn.classList.add('loading');
+    progressWrap.classList.add('visible');
+    animateProgress(progressFill, 80, 1800);
+
+    try {
+      const data = await fetchVideoInfo(url);
+      animateProgress(progressFill, 100, 300);
+      setTimeout(() => {
+        progressWrap.classList.remove('visible');
+        progressFill.style.width = '0%';
+        displayResult(data);
+      }, 400);
+    } catch (err) {
+      progressWrap.classList.remove('visible');
+      progressFill.style.width = '0%';
+      showError('❌ حدث خطأ أثناء جلب الفيديو. تأكد من صحة الرابط وحاول مجدداً.');
+      console.error(err);
+    } finally {
+      btn.classList.remove('loading');
+    }
+  }
+
+  function isValidTikTokUrl(url) {
+    return /tiktok\.com|douyin\.com|vm\.tiktok\.com|vt\.tiktok\.com/.test(url);
+  }
+
+  async function fetchVideoInfo(videoUrl) {
+    let apiUrl;
+
+    if (IS_DEPLOYED) {
+      // Use our own Vercel serverless proxy (no CORS issues)
+      apiUrl = `/api/proxy?url=${encodeURIComponent(videoUrl)}`;
+    } else {
+      // Direct call for local testing
+      apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(videoUrl)}&hd=1`;
+    }
+
+    const res = await fetch(apiUrl);
+    if (!res.ok) throw new Error('API error');
+
+    const json = await res.json();
+    if (json.code !== 0 || !json.data) throw new Error(json.msg || 'Could not fetch video');
+
+    const d = json.data;
+    return {
+      title: d.title || 'فيديو TikTok',
+      author: d.author?.nickname || '',
+      cover: d.cover || d.origin_cover || '',
+      duration: d.duration ? formatDuration(d.duration) : '',
+      playCount: d.play_count ? formatNumber(d.play_count) : '',
+      links: buildLinks(d)
+    };
+  }
+
+  function buildLinks(d) {
+    const links = [];
+    if (d.hdplay) links.push({ label: '⬇ HD بدون علامة', url: d.hdplay, quality: 'HD', primary: true });
+    if (d.play)   links.push({ label: '⬇ SD بدون علامة', url: d.play, quality: 'SD', primary: !d.hdplay });
+    if (d.wmplay) links.push({ label: '⬇ مع علامة مائية', url: d.wmplay, quality: 'WM', primary: false });
+    return links;
+  }
+
+  function displayResult(data) {
+    const resultArea  = document.getElementById('resultArea');
+    const thumbArea   = document.getElementById('thumbArea');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultMeta  = document.getElementById('resultMeta');
+    const downloadBtns = document.getElementById('downloadBtns');
+
+    if (data.cover) {
+      thumbArea.innerHTML = `<img src="${data.cover}" alt="thumbnail" onerror="this.parentNode.innerHTML='🎬'">`;
+    }
+
+    resultTitle.textContent = data.title;
+
+    let metaHtml = '';
+    if (data.author)    metaHtml += `<span class="meta-tag">👤 ${data.author}</span>`;
+    if (data.duration)  metaHtml += `<span class="meta-tag">⏱ ${data.duration}</span>`;
+    if (data.playCount) metaHtml += `<span class="meta-tag">▶ ${data.playCount} مشاهدة</span>`;
+    resultMeta.innerHTML = metaHtml;
+
+    downloadBtns.innerHTML = '';
+    if (data.links.length === 0) {
+      downloadBtns.innerHTML = '<span style="color:var(--muted);font-size:.85rem">لم يتم العثور على روابط تحميل</span>';
+    } else {
+      data.links.forEach(link => {
+        const a = document.createElement('a');
+        a.href = link.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.download = '';
+        a.className = `dl-btn ${link.primary ? 'dl-btn-primary' : 'dl-btn-secondary'}`;
+        a.textContent = link.label;
+        downloadBtns.appendChild(a);
+      });
+    }
+
+    resultArea.classList.add('visible');
+    resultArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.classList.add('visible');
+  }
+
+  function animateProgress(el, target, duration) {
+    const start = parseFloat(el.style.width) || 0;
+    const diff = target - start;
+    const startTime = performance.now();
+    function step(now) {
+      const t = Math.min((now - startTime) / duration, 1);
+      el.style.width = (start + diff * easeOut(t)) + '%';
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function formatDuration(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${String(sec).padStart(2, '0')}`;
+  }
+
+  function formatNumber(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K';
+    return n;
+  }
+
+  document.getElementById('urlInput').addEventListener('keypress', e => {
+    if (e.key === 'Enter') handleDownload();
+  });
+</script>
+</body>
+</html>
