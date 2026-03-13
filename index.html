@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TikDown - تحميل فيديوهات TikTok</title>
+<title>Aidivnai - تحميل فيديوهات TikTok بدون علامة مائية</title>
+<meta name="description" content="Aidivnai - حمّل فيديوهات TikTok مجاناً بدون علامة مائية وبجودة HD. سريع، آمن، مجاني.">
+<meta name="keywords" content="تحميل تيك توك, TikTok downloader, بدون علامة مائية, aidivnai">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Aidivnai - تحميل فيديوهات TikTok">
+<meta property="og:description" content="حمّل فيديوهات TikTok مجاناً بدون علامة مائية">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://aidivnai.vercel.app/">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -12,6 +19,7 @@
   --text:#eeeef8; --muted:#7878a0;
 }
 *{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;min-height:100vh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(255,45,85,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,45,85,.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0}
 .b1,.b2{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
@@ -19,12 +27,18 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .b2{width:450px;height:450px;background:rgba(0,229,192,.07);bottom:-100px;right:-150px;animation:bf 12s ease-in-out infinite reverse}
 @keyframes bf{0%,100%{transform:translateY(0)}50%{transform:translateY(40px)}}
 
+/* NAV */
 nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;backdrop-filter:blur(24px);background:rgba(8,8,14,.7);border-bottom:1px solid var(--border)}
-.logo{display:flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--text);text-decoration:none}
+.logo{display:flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--text);text-decoration:none;cursor:pointer}
 .logo-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--red),var(--orange));display:flex;align-items:center;justify-content:center}
 .logo em{color:var(--red);font-style:normal}
 .badge{font-size:.68rem;padding:3px 12px;border-radius:20px;background:rgba(255,45,85,.12);border:1px solid rgba(255,45,85,.25);color:var(--red)}
 
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+/* HERO */
 .hero{position:relative;z-index:1;text-align:center;padding:80px 20px 60px}
 .chip{display:inline-block;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--teal);border:1px solid rgba(0,229,192,.3);padding:5px 16px;border-radius:20px;margin-bottom:22px;animation:fu .6s ease both}
 h1{font-size:clamp(2.4rem,5.5vw,4.2rem);font-weight:900;line-height:1.1;margin-bottom:18px;animation:fu .6s .1s ease both}
@@ -88,9 +102,41 @@ h1 .hl{background:linear-gradient(135deg,var(--red),var(--orange));-webkit-backg
 .fc h3{font-size:.95rem;font-weight:700;margin-bottom:7px}
 .fc p{font-size:.82rem;color:var(--muted);line-height:1.8}
 
-footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:26px 40px;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:.78rem;flex-wrap:wrap;gap:10px}
-footer a{color:var(--muted);text-decoration:none}
-footer a:hover{color:var(--red)}
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:40px;margin-top:40px}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;max-width:980px;margin:0 auto 32px}
+.footer-col h4{font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.footer-col a{display:block;font-size:.85rem;color:var(--muted);text-decoration:none;margin-bottom:8px;transition:color .2s}
+.footer-col a:hover{color:var(--red)}
+.footer-col p{font-size:.82rem;color:var(--muted);line-height:1.8}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;max-width:980px;margin:0 auto;font-size:.75rem;color:var(--muted)}
+.footer-bottom a{color:var(--muted);text-decoration:none}
+.footer-bottom a:hover{color:var(--red)}
+
+/* INNER PAGES */
+.inner-page{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:60px 24px 80px}
+.inner-page h2{font-size:2rem;font-weight:900;margin-bottom:8px}
+.inner-page .page-date{font-size:.8rem;color:var(--muted);margin-bottom:40px}
+.inner-page h3{font-size:1.1rem;font-weight:700;margin:28px 0 10px;color:var(--text)}
+.inner-page p{font-size:.9rem;color:var(--muted);line-height:1.9;margin-bottom:14px}
+.inner-page ul{padding-right:20px;margin-bottom:14px}
+.inner-page ul li{font-size:.9rem;color:var(--muted);line-height:2}
+.inner-page a{color:var(--red);text-decoration:none}
+.back-btn{display:inline-flex;align-items:center;gap:8px;font-size:.85rem;color:var(--muted);cursor:pointer;margin-bottom:32px;padding:8px 16px;border:1px solid var(--border);border-radius:10px;background:var(--card);transition:color .2s,border-color .2s}
+.back-btn:hover{color:var(--text);border-color:rgba(255,45,85,.3)}
+
+/* contact form */
+.contact-form{margin-top:24px}
+.contact-form input,.contact-form textarea{
+  width:100%;background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:12px 16px;color:var(--text);
+  font-family:'Cairo',sans-serif;font-size:.9rem;margin-bottom:14px;
+  outline:none;transition:border-color .2s;resize:vertical;
+}
+.contact-form input:focus,.contact-form textarea:focus{border-color:rgba(255,45,85,.4)}
+.contact-form textarea{min-height:120px}
+.contact-form button{background:linear-gradient(135deg,var(--red),#b8002a);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-family:'Cairo',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer}
+.sent-msg{display:none;margin-top:14px;padding:12px 18px;background:rgba(0,229,192,.08);border:1px solid rgba(0,229,192,.2);border-radius:10px;color:var(--teal);font-size:.88rem;text-align:center}
 
 @media(max-width:580px){
   nav{padding:14px 18px}
@@ -99,7 +145,7 @@ footer a:hover{color:var(--red)}
   .input-row input{width:100%}
   .btn{width:100%;justify-content:center}
   .r-card{flex-direction:column}
-  footer{justify-content:center;text-align:center}
+  footer{padding:30px 18px}
 }
 </style>
 </head>
@@ -107,77 +153,281 @@ footer a:hover{color:var(--red)}
 <div class="b1"></div><div class="b2"></div>
 
 <nav>
-  <a href="#" class="logo">
+  <div class="logo" onclick="showPage('home')">
     <div class="logo-icon">▶</div>
-    Tik<em>Down</em>
-  </a>
+    ai<em>divnai</em>
+  </div>
   <span class="badge">مجاني 100%</span>
 </nav>
 
-<section class="hero">
-  <div class="chip">✦ بدون علامة مائية</div>
-  <h1>حمّل فيديوهات<br><span class="hl">TikTok</span> بسهولة</h1>
-  <p class="sub">الصق رابط الفيديو واحصل على تحميل فوري بجودة عالية — بدون تطبيق، بدون تسجيل</p>
+<!-- ==================== HOME PAGE ==================== -->
+<div id="page-home" class="page active">
 
-  <div class="box-wrap">
-    <div class="input-row">
-      <span style="color:var(--red);font-size:1.1rem;flex-shrink:0">🔗</span>
-      <input type="url" id="urlInput" placeholder="https://www.tiktok.com/@user/video/..." autocomplete="off"/>
-      <button class="btn" id="dlBtn" onclick="go()">
-        <div class="spin"></div><span class="bt">⬇ تحميل</span>
-      </button>
-    </div>
-  </div>
+  <section class="hero">
+    <div class="chip">✦ بدون علامة مائية</div>
+    <h1>حمّل فيديوهات<br><span class="hl">TikTok</span> بسهولة</h1>
+    <p class="sub">الصق رابط الفيديو واحصل على تحميل فوري بجودة عالية — بدون تطبيق، بدون تسجيل</p>
 
-  <div class="pw" id="pw"><div class="pb"><div class="pf" id="pf"></div></div></div>
-  <div class="err" id="err"></div>
-
-  <div class="result" id="result">
-    <div class="r-card">
-      <div class="r-thumb" id="thumb">🎬</div>
-      <div class="r-info">
-        <div class="r-title" id="rtitle"></div>
-        <div class="r-meta" id="rmeta"></div>
-        <div class="dl-row" id="dlrow"></div>
+    <div class="box-wrap">
+      <div class="input-row">
+        <span style="color:var(--red);font-size:1.1rem;flex-shrink:0">🔗</span>
+        <input type="url" id="urlInput" placeholder="https://www.tiktok.com/@user/video/..." autocomplete="off"/>
+        <button class="btn" id="dlBtn" onclick="go()">
+          <div class="spin"></div><span class="bt">⬇ تحميل</span>
+        </button>
       </div>
     </div>
-  </div>
 
-  <div class="platforms">
-    <div class="plat"><div class="dot"></div>TikTok</div>
-    <div class="plat"><div class="dot"></div>Douyin</div>
-    <div class="plat"><div class="dot"></div>TikTok Lite</div>
-  </div>
-</section>
+    <div class="pw" id="pw"><div class="pb"><div class="pf" id="pf"></div></div></div>
+    <div class="err" id="err"></div>
 
-<section class="how">
-  <h2>كيف يعمل؟</h2>
-  <div class="steps">
-    <div class="step"><div class="snum">1</div><strong>انسخ الرابط</strong><p>في TikTok اضغط "مشاركة" ثم "نسخ الرابط"</p></div>
-    <div class="step"><div class="snum">2</div><strong>الصق الرابط</strong><p>أدخله في مربع البحث أعلاه</p></div>
-    <div class="step"><div class="snum">3</div><strong>اختر الجودة</strong><p>HD أو SD بدون علامة مائية</p></div>
-    <div class="step"><div class="snum">4</div><strong>حمّل!</strong><p>الملف يُحفظ مباشرة في جهازك</p></div>
-  </div>
-</section>
+    <div class="result" id="result">
+      <div class="r-card">
+        <div class="r-thumb" id="thumb">🎬</div>
+        <div class="r-info">
+          <div class="r-title" id="rtitle"></div>
+          <div class="r-meta" id="rmeta"></div>
+          <div class="dl-row" id="dlrow"></div>
+        </div>
+      </div>
+    </div>
 
-<section class="features">
-  <div class="sec-lbl">لماذا TikDown؟</div>
-  <div class="grid">
-    <div class="fc"><div class="fi">🚫</div><h3>بدون علامة مائية</h3><p>فيديو نظيف تماماً بدون شعار TikTok</p></div>
-    <div class="fc"><div class="fi">⚡</div><h3>سرعة فائقة</h3><p>معالجة فورية وتحميل سريع</p></div>
-    <div class="fc"><div class="fi">🎯</div><h3>جودة HD</h3><p>أعلى جودة متاحة للفيديو الأصلي</p></div>
-    <div class="fc"><div class="fi">🔒</div><h3>آمن وخاص</h3><p>لا نحفظ أي فيديوهات أو بيانات</p></div>
-    <div class="fc"><div class="fi">📱</div><h3>كل الأجهزة</h3><p>موبايل، تابلت، أو كمبيوتر</p></div>
-    <div class="fc"><div class="fi">💸</div><h3>مجاني تماماً</h3><p>لا تسجيل، لا اشتراك، لا رسوم</p></div>
-  </div>
-</section>
+    <div class="platforms">
+      <div class="plat"><div class="dot"></div>TikTok</div>
+      <div class="plat"><div class="dot"></div>Douyin</div>
+      <div class="plat"><div class="dot"></div>TikTok Lite</div>
+    </div>
+  </section>
 
+  <section class="how">
+    <h2>كيف يعمل؟</h2>
+    <div class="steps">
+      <div class="step"><div class="snum">1</div><strong>انسخ الرابط</strong><p>في TikTok اضغط "مشاركة" ثم "نسخ الرابط"</p></div>
+      <div class="step"><div class="snum">2</div><strong>الصق الرابط</strong><p>أدخله في مربع البحث أعلاه</p></div>
+      <div class="step"><div class="snum">3</div><strong>اختر الجودة</strong><p>HD أو SD بدون علامة مائية</p></div>
+      <div class="step"><div class="snum">4</div><strong>حمّل!</strong><p>الملف يُحفظ مباشرة في جهازك</p></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="sec-lbl">لماذا Aidivnai؟</div>
+    <div class="grid">
+      <div class="fc"><div class="fi">🚫</div><h3>بدون علامة مائية</h3><p>فيديو نظيف تماماً بدون شعار TikTok</p></div>
+      <div class="fc"><div class="fi">⚡</div><h3>سرعة فائقة</h3><p>معالجة فورية وتحميل سريع</p></div>
+      <div class="fc"><div class="fi">🎯</div><h3>جودة HD</h3><p>أعلى جودة متاحة للفيديو الأصلي</p></div>
+      <div class="fc"><div class="fi">🔒</div><h3>آمن وخاص</h3><p>لا نحفظ أي فيديوهات أو بيانات</p></div>
+      <div class="fc"><div class="fi">📱</div><h3>كل الأجهزة</h3><p>موبايل، تابلت، أو كمبيوتر</p></div>
+      <div class="fc"><div class="fi">💸</div><h3>مجاني تماماً</h3><p>لا تسجيل، لا اشتراك، لا رسوم</p></div>
+    </div>
+  </section>
+
+</div><!-- end home -->
+
+<!-- ==================== PRIVACY PAGE ==================== -->
+<div id="page-privacy" class="page">
+  <div class="inner-page">
+    <div class="back-btn" onclick="showPage('home')">← العودة للرئيسية</div>
+    <h2>سياسة الخصوصية</h2>
+    <p class="page-date">آخر تحديث: مارس 2025</p>
+
+    <h3>١. المعلومات التي نجمعها</h3>
+    <p>لا يقوم موقع Aidivnai بجمع أي معلومات شخصية من المستخدمين. لا نطلب التسجيل، ولا نحتفظ بأي بيانات تعريفية.</p>
+    <p>عند استخدام خدمة التحميل، يُرسل رابط الفيديو إلى خادمنا لمعالجته فقط، ولا يُخزَّن بأي شكل من الأشكال.</p>
+
+    <h3>٢. ملفات تعريف الارتباط (Cookies)</h3>
+    <p>لا يستخدم الموقع ملفات تعريف الارتباط لتتبع المستخدمين. قد يستخدم المتصفح ملفات مؤقتة لأغراض الأداء فقط.</p>
+
+    <h3>٣. الإعلانات</h3>
+    <p>قد يعرض الموقع إعلانات من خلال Google AdSense أو شركاء إعلانيين آخرين. هذه الأطراف الثالثة قد تستخدم ملفات تعريف الارتباط لعرض إعلانات ذات صلة. يمكنك مراجعة سياسة خصوصية Google للمزيد من المعلومات.</p>
+
+    <h3>٤. خدمات الطرف الثالث</h3>
+    <p>يعتمد الموقع على API خارجية لمعالجة روابط TikTok. هذه الخدمات لديها سياسات خصوصية خاصة بها لا نتحكم فيها.</p>
+
+    <h3>٥. الروابط الخارجية</h3>
+    <p>قد يحتوي الموقع على روابط لمواقع خارجية. Aidivnai غير مسؤول عن سياسات الخصوصية لتلك المواقع.</p>
+
+    <h3>٦. أمان البيانات</h3>
+    <p>نلتزم بحماية خصوصيتك. لا يتم تخزين أي فيديو أو رابط أو بيانات مستخدم على خوادمنا.</p>
+
+    <h3>٧. حقوق المستخدمين</h3>
+    <p>بما أننا لا نجمع بيانات شخصية، لا توجد بيانات لطلب حذفها. لأي استفسار تواصل معنا عبر صفحة <a href="#" onclick="showPage('contact')">اتصل بنا</a>.</p>
+
+    <h3>٨. تغييرات على السياسة</h3>
+    <p>نحتفظ بحق تعديل هذه السياسة في أي وقت. سيتم نشر التغييرات على هذه الصفحة مع تحديث تاريخ "آخر تحديث".</p>
+  </div>
+</div>
+
+<!-- ==================== TERMS PAGE ==================== -->
+<div id="page-terms" class="page">
+  <div class="inner-page">
+    <div class="back-btn" onclick="showPage('home')">← العودة للرئيسية</div>
+    <h2>شروط الاستخدام</h2>
+    <p class="page-date">آخر تحديث: مارس 2025</p>
+
+    <h3>١. قبول الشروط</h3>
+    <p>باستخدامك لموقع Aidivnai، فإنك توافق على الالتزام بهذه الشروط. إذا كنت لا توافق على أي من هذه الشروط، يرجى عدم استخدام الموقع.</p>
+
+    <h3>٢. وصف الخدمة</h3>
+    <p>يوفر Aidivnai أداة تقنية تتيح للمستخدمين تحميل فيديوهات TikTok التي نشروها هم أنفسهم أو المتاحة للعموم، للاستخدام الشخصي فقط.</p>
+
+    <h3>٣. الاستخدام المقبول</h3>
+    <ul>
+      <li>تحميل فيديوهاتك الخاصة فقط أو الفيديوهات المتاحة للعموم</li>
+      <li>الاستخدام الشخصي وغير التجاري فقط</li>
+      <li>احترام حقوق الملكية الفكرية لمنشئي المحتوى</li>
+    </ul>
+
+    <h3>٤. الاستخدام المحظور</h3>
+    <ul>
+      <li>تحميل محتوى محمي بحقوق الملكية الفكرية دون إذن</li>
+      <li>إعادة نشر أو بيع المحتوى المحمل</li>
+      <li>استخدام الموقع لأي غرض غير قانوني</li>
+      <li>محاولة اختراق أو إلحاق الضرر بالموقع</li>
+    </ul>
+
+    <h3>٥. إخلاء المسؤولية</h3>
+    <p>Aidivnai ليس تابعاً لـ TikTok أو ByteDance Ltd. الموقع أداة تقنية مستقلة. المستخدم مسؤول مسؤولية كاملة عن الاستخدام القانوني للمحتوى الذي يحمله.</p>
+
+    <h3>٦. حقوق الملكية الفكرية</h3>
+    <p>نحترم حقوق الملكية الفكرية. إذا كنت تعتقد أن محتوى يُستخدم بشكل غير قانوني، تواصل معنا عبر صفحة <a href="#" onclick="showPage('contact')">اتصل بنا</a>.</p>
+
+    <h3>٧. تحديد المسؤولية</h3>
+    <p>يُقدَّم الموقع "كما هو" دون أي ضمانات. لا نتحمل مسؤولية أي أضرار مباشرة أو غير مباشرة ناتجة عن استخدام الخدمة.</p>
+
+    <h3>٨. التعديلات</h3>
+    <p>نحتفظ بحق تعديل هذه الشروط في أي وقت. الاستمرار في استخدام الموقع يعني قبولك للشروط المعدّلة.</p>
+  </div>
+</div>
+
+<!-- ==================== DMCA PAGE ==================== -->
+<div id="page-dmca" class="page">
+  <div class="inner-page">
+    <div class="back-btn" onclick="showPage('home')">← العودة للرئيسية</div>
+    <h2>سياسة DMCA</h2>
+    <p class="page-date">حقوق الملكية الفكرية</p>
+
+    <h3>التزامنا بحقوق الملكية</h3>
+    <p>يحترم Aidivnai حقوق الملكية الفكرية ويلتزم بأحكام قانون الألفية الثالثة لحقوق المؤلف الرقمي (DMCA).</p>
+
+    <h3>تقديم بلاغ DMCA</h3>
+    <p>إذا كنت تعتقد أن محتوى على منصتنا ينتهك حقوق طبع ونشر خاصة بك، يرجى إرسال بلاغ يحتوي على:</p>
+    <ul>
+      <li>توقيعك الإلكتروني أو الفعلي كصاحب حق أو ممثله المخوّل</li>
+      <li>وصف المحتوى المحمي بحقوق الطبع والنشر الذي تدّعي انتهاكه</li>
+      <li>رابط المحتوى المنتهَك على موقعنا</li>
+      <li>معلومات الاتصال الخاصة بك (البريد الإلكتروني، الاسم)</li>
+      <li>بيان يفيد بأنك تعتقد بحسن نية أن الاستخدام غير مرخص</li>
+    </ul>
+
+    <h3>كيفية التواصل</h3>
+    <p>أرسل بلاغ DMCA عبر صفحة <a href="#" onclick="showPage('contact')">اتصل بنا</a> أو عبر البريد الإلكتروني المذكور هناك. سنتعامل مع جميع البلاغات الصحيحة خلال 48 ساعة عمل.</p>
+
+    <h3>ملاحظة مهمة</h3>
+    <p>Aidivnai لا يستضيف أي فيديوهات على خوادمه. جميع الفيديوهات مستضافة على خوادم TikTok. نحن نوفر فقط أداة للوصول إلى الروابط المتاحة للعموم.</p>
+  </div>
+</div>
+
+<!-- ==================== ABOUT PAGE ==================== -->
+<div id="page-about" class="page">
+  <div class="inner-page">
+    <div class="back-btn" onclick="showPage('home')">← العودة للرئيسية</div>
+    <h2>من نحن</h2>
+    <p class="page-date">Aidivnai</p>
+
+    <h3>عن الموقع</h3>
+    <p>Aidivnai هو موقع مجاني يتيح للمستخدمين تحميل فيديوهات TikTok بجودة عالية وبدون علامة مائية، للاستخدام الشخصي.</p>
+
+    <h3>مهمتنا</h3>
+    <p>نؤمن بأن الوصول إلى المحتوى الرقمي يجب أن يكون سهلاً وسريعاً. هدفنا تقديم أداة بسيطة وموثوقة بدون تعقيدات.</p>
+
+    <h3>ما يميزنا</h3>
+    <ul>
+      <li>واجهة بسيطة وسريعة الاستخدام</li>
+      <li>لا حاجة للتسجيل أو إنشاء حساب</li>
+      <li>تحميل بجودة HD بدون علامة مائية</li>
+      <li>خدمة مجانية بالكامل</li>
+      <li>يعمل على جميع الأجهزة والمتصفحات</li>
+    </ul>
+
+    <h3>تنويه قانوني</h3>
+    <p>Aidivnai ليس تابعاً لشركة TikTok أو ByteDance Ltd. نحن نوفر أداة تقنية مستقلة لأغراض الاستخدام الشخصي فقط.</p>
+  </div>
+</div>
+
+<!-- ==================== CONTACT PAGE ==================== -->
+<div id="page-contact" class="page">
+  <div class="inner-page">
+    <div class="back-btn" onclick="showPage('home')">← العودة للرئيسية</div>
+    <h2>اتصل بنا</h2>
+    <p class="page-date">نرد خلال 24-48 ساعة عمل</p>
+
+    <h3>تواصل معنا</h3>
+    <p>سواء كان لديك سؤال، أو مشكلة تقنية، أو بلاغ DMCA، أو اقتراح — نحن هنا للمساعدة.</p>
+
+    <div class="contact-form">
+      <input type="text" id="cf-name" placeholder="اسمك الكامل" />
+      <input type="email" id="cf-email" placeholder="بريدك الإلكتروني" dir="ltr" />
+      <input type="text" id="cf-subject" placeholder="الموضوع" />
+      <textarea id="cf-msg" placeholder="رسالتك..."></textarea>
+      <button onclick="sendMsg()">إرسال الرسالة ✉️</button>
+      <div class="sent-msg" id="sent-msg">✅ تم إرسال رسالتك بنجاح! سنرد عليك قريباً.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
 <footer>
-  <span>© 2025 TikDown</span>
-  <div style="display:flex;gap:18px"><a href="#">سياسة الخصوصية</a><a href="#">شروط الاستخدام</a></div>
+  <div class="footer-grid">
+    <div class="footer-col">
+      <h4>Aidivnai</h4>
+      <p>أداة مجانية لتحميل فيديوهات TikTok بدون علامة مائية وبجودة HD.</p>
+    </div>
+    <div class="footer-col">
+      <h4>الخدمات</h4>
+      <a href="#" onclick="showPage('home')">تحميل TikTok</a>
+      <a href="#" onclick="showPage('home')">بدون علامة مائية</a>
+      <a href="#" onclick="showPage('home')">جودة HD</a>
+    </div>
+    <div class="footer-col">
+      <h4>قانوني</h4>
+      <a href="#" onclick="showPage('privacy')">سياسة الخصوصية</a>
+      <a href="#" onclick="showPage('terms')">شروط الاستخدام</a>
+      <a href="#" onclick="showPage('dmca')">سياسة DMCA</a>
+    </div>
+    <div class="footer-col">
+      <h4>الموقع</h4>
+      <a href="#" onclick="showPage('about')">من نحن</a>
+      <a href="#" onclick="showPage('contact')">اتصل بنا</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Aidivnai — جميع الحقوق محفوظة</span>
+    <span>غير تابع لـ TikTok أو ByteDance Ltd.</span>
+  </div>
 </footer>
 
 <script>
+// ── Page Navigation ──
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ── Contact Form ──
+function sendMsg() {
+  const name = document.getElementById('cf-name').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const msg = document.getElementById('cf-msg').value.trim();
+  if (!name || !email || !msg) return alert('يرجى ملء جميع الحقول');
+  document.getElementById('sent-msg').style.display = 'block';
+  document.getElementById('cf-name').value = '';
+  document.getElementById('cf-email').value = '';
+  document.getElementById('cf-subject').value = '';
+  document.getElementById('cf-msg').value = '';
+}
+
+// ── Downloader ──
 async function go() {
   const url = document.getElementById('urlInput').value.trim();
   const btn = document.getElementById('dlBtn');
@@ -200,10 +450,7 @@ async function go() {
   try {
     const data = await fetchVideo(url);
     prog(pf, 100, 300);
-    setTimeout(() => {
-      pw.classList.remove('on'); pf.style.width='0%';
-      render(data);
-    }, 400);
+    setTimeout(() => { pw.classList.remove('on'); pf.style.width='0%'; render(data); }, 400);
   } catch(e) {
     pw.classList.remove('on'); pf.style.width='0%';
     showErr('❌ ' + (e.message || 'حدث خطأ — حاول مجدداً'));
@@ -213,11 +460,10 @@ async function go() {
 }
 
 async function fetchVideo(url) {
-  // 1) Try our serverless proxy (works on Vercel)
+  // 1) Try serverless proxy (Vercel)
   try {
     const res = await fetch(`/api/download?url=${encodeURIComponent(url)}`);
     const text = await res.text();
-    // If response starts with < it's an HTML error page (local file), not JSON
     if (text.trim().startsWith('<')) throw new Error('not_deployed');
     const json = JSON.parse(text);
     if (!json.success) throw new Error(json.error || 'فشل جلب الفيديو');
@@ -226,7 +472,7 @@ async function fetchVideo(url) {
     if (e.message === 'فشل جلب الفيديو') throw e;
   }
 
-  // 2) Fallback: call tikwm directly (for local testing)
+  // 2) Fallback: direct API call (local testing)
   const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}&hd=1`);
   const json = await res.json();
   if (json.code !== 0 || !json.data) throw new Error(json.msg || 'فشل جلب الفيديو');
@@ -247,7 +493,6 @@ async function fetchVideo(url) {
 }
 
 function render(d) {
-  const resEl = document.getElementById('result');
   document.getElementById('thumb').innerHTML = d.cover
     ? `<img src="${d.cover}" onerror="this.parentNode.innerHTML='🎬'">`
     : '🎬';
@@ -270,8 +515,8 @@ function render(d) {
     row.appendChild(a);
   });
 
-  resEl.classList.add('on');
-  resEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+  document.getElementById('result').classList.add('on');
+  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
 function showErr(msg) {
